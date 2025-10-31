@@ -1,48 +1,63 @@
-{% extends 'home/base.html' %}
-{% load static %}
+{% extends 'home/base.html' %} {% block content %}
+<main class="conteudo">
+  <section class="secao" style="padding: 2rem">
+    <h1>Encontrar Amigos</h1>
 
-{% block content %}
-<div class="container-amigos"> {# Container principal #}
-    <section class="secao"> {# Envolve o conteúdo em uma seção #}
-        <h1>Encontrar Amigos</h1>
+    <form method="GET" action="{% url 'home:buscar_usuarios' %}">
+      <input
+        type="text"
+        name="q"
+        placeholder="Digite o nome de usuário ou nome real"
+        value="{{ query }}"
+        style="padding: 10px; width: 300px"
+      />
+      <button type="submit" style="padding: 10px">Buscar</button>
+    </form>
 
-        <form method="GET" action="{% url 'home:buscar_usuarios' %}" class="form-busca"> {# Formulário estilizado #}
-            <input
-                type="text"
-                name="q"
-                placeholder="Digite o nome de usuário ou nome real"
-                value="{{ query }}"
-            />
-            <button type="submit">Buscar</button> {# Botão estilizado #}
-        </form>
+    <hr style="margin: 2rem 0" />
 
-        <hr /> {# Linha estilizada #}
+    {% if query %}
+    <h2>Resultados para "{{ query }}"</h2>
+    {% if resultados %}
+    <ul style="list-style: none; padding: 0">
+      {% for usuario_encontrado in resultados %}
+      <li
+        style="
+          background-color: #f2f2f2;
+          padding: 15px;
+          border-radius: 8px;
+          margin-bottom: 10px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        "
+      >
+        <span>
+          {{ usuario_encontrado.nome_usuario }} {% if usuario_encontrado.nome %}
+          ({{ usuario_encontrado.nome }}) {% endif %}
+        </span>
+        >
 
-        {% if query %}
-            <h2>Resultados para "{{ query }}"</h2>
-            {% if resultados %}
-                <ul class="lista-resultados"> {# Lista de resultados estilizada #}
-                    {% for usuario_encontrado in resultados %}
-                        <li class="resultado-item"> {# Item de resultado estilizado #}
-                            <span>
-                                {{ usuario_encontrado.nome_usuario }}
-                                {% if usuario_encontrado.nome %}
-                                    <small>({{ usuario_encontrado.nome }})</small> {# Nome real menor #}
-                                {% endif %}
-                            </span>
-                            {# Botão estilizado #}
-                            <a href="{% url 'home:enviar_pedido_amizade' usuario_encontrado.pk %}" class="botao-link botao-secundario">
-                                Enviar Pedido
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p class="sem-resultados">Nenhum usuário encontrado.</p> {# Parágrafo estilizado #}
-            {% endif %}
-        {% else %}
-            <p>Digite um nome acima para buscar por novos amigos.</p>
-        {% endif %}
-    </section>
-</div>
+        <a
+          href="{% url 'home:enviar_pedido_amizade' usuario_encontrado.pk %}"
+          style="
+            text-decoration: none;
+            background-color: #007bff;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+          "
+        >
+          Enviar Pedido
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>Nenhum usuário encontrado.</p>
+    {% endif %} {% else %}
+    <p>Digite um nome acima para buscar por novos amigos.</p>
+    {% endif %}
+  </section>
+</main>
 {% endblock %}

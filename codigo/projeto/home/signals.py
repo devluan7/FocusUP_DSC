@@ -2,8 +2,8 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models.conquista import UsuarioConquista
-from .models.tarefa import Tarefa 
-from datetime import datetime    
+from .models.tarefa import Tarefa # <--- ADICIONE ESTA IMPORTAÇÃO
+from datetime import datetime     # <--- ADICIONE ESTA IMPORTAÇÃO
 
 # ==========================================================
 # SIGNAL DE XP POR TAREFA (O QUE ESTAVA FALTANDO)

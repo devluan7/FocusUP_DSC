@@ -1,49 +1,166 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Adicionar Tarefa - FocusUP</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="{% static 'home/css/estiloaddtarefa.css' %}" />
-  </head>
-  <body>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="{% static 'home/css/estilohome.css' %}" />
     
+    <link rel="stylesheet" href="{% static 'home/css/estiloaddtarefa.css' %}?v=2" />
+
+</head>
+<body>
+
     <header class="cabecalho-principal">
       <div class="container-cabecalho">
-        <a href="{% url 'home:home' %}" class="logo">FocusUP</a>
-        <nav class="navegacao-principal">
-          <ul>
-            <li><a href="{% url 'home:home' %}">Painel</a></li>
-            <li>
-              <a href="{% url 'home:lista_Tarefas' %}" class="ativo">Tarefas</a>
-            </li>
-            <li><a href="#">Loja</a></li>
-          </ul>
-        </nav>
+        
+        <a href="{% url 'home:home' %}" class="logo">
+          <img src="{% static 'home/img/LogoOFC.png' %}" alt="FocusUP Logo">
+        </a>
+        
+        <div class="menu-desktop-container">
+          <nav class="navegacao-principal">
+            <ul>
+              <li><a href="{% url 'home:home' %}" {% if request.resolver_match.url_name == 'home' %}class="ativo"{% endif %}>Painel</a></li>
+              <li><a href="{% url 'home:lista_Tarefas' %}" {% if request.resolver_match.url_name == 'lista_Tarefas' or request.resolver_match.url_name == 'adicionar_Tarefas' %}class="ativo"{% endif %}>Tarefas</a></li>
+              <li><a href="#">Loja</a></li> 
+            </ul>
+          </nav>
+          
+          <button class="profile-avatar perfil-foto-container" id="profile-dropdown-trigger" aria-label="Abrir menu do perfil" aria-expanded="false" tabindex="0">
+            <img src="https://static.wikia.nocookie.net/naruto/images/d/d7/Naruto_Uzumaki_%28Parte_I_-_Genin%29.png" alt="Avatar do Usuário" class="perfil-foto">
+            <span class="level-badge level-badge-display">
+              {{ user.nivel|default:1 }}
+            </span>
+          </button>
+        </div>
+
+        <button class="botao-menu-mobile" id="botao-menu-mobile" aria-label="Abrir menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        
       </div>
     </header>
-    <div class="form-container">
-      <h1>Adicionar Nova Tarefa</h1>
 
-      <form method="POST">
-        {% csrf_token %} 
-        
-        {{ form.as_p }}
-
-        <button type="submit" class="submit-button">Salvar Tarefa</button>
-      </form>
-
-      <a href="{% url 'home:lista_Tarefas' %}" class="cancel-link"
-        >Cancelar e voltar para a lista</a
-      >
+    <div class="profile-dropdown" id="profile-dropdown">
+      <ul>
+        <li><a href="{% url 'home:editar_perfil' %}" {% if request.resolver_match.url_name == 'editar_perfil' %}class="ativo"{% endif %}>Meu Perfil</a></li>
+        <li><a href="{% url 'home:meu_perfil_focos' %}" {% if request.resolver_match.url_name == 'meu_perfil_focos' %}class="ativo"{% endif %}>Perfil Focos</a></li>
+        <li class="dropdown-divisor"><hr></li>
+        <li><a href="{% url 'home:logout' %}" class="dropdown-sair">Sair</a></li>
+      </ul>
     </div>
-  </body>
+
+    <div class="menu-mobile-overlay" id="menu-mobile-overlay">
+      <nav class="navegacao-mobile">
+        <ul>
+          <li><a href="{% url 'home:home' %}" {% if request.resolver_match.url_name == 'home' %}class="ativo"{% endif %}>Painel</a></li>
+          <li><a href="{% url 'home:lista_Tarefas' %}" {% if request.resolver_match.url_name == 'lista_Tarefas' or request.resolver_match.url_name == 'adicionar_Tarefas' %}class="ativo"{% endif %}>Tarefas</a></li>
+          <li><a href="#">Loja</a></li> 
+        </ul>
+      </nav>
+      
+      <button class="profile-avatar-mobile perfil-foto-container" id="profile-dropdown-trigger-mobile" aria-label="Abrir menu do perfil" aria-expanded="false" tabindex="0">
+        <img src="https://static.wikia.nocookie.net/naruto/images/d/d7/Naruto_Uzumaki_%2C(Parte_I_-_Genin%29.png" alt="Avatar do Usuário" class="perfil-foto">
+        <span>{{ user.nome_usuario|default:user.email }}</span>
+        <span class="level-badge level-badge-display">
+          {{ user.nivel|default:1 }}
+        </span>
+      </button>
+      
+      <div class="profile-dropdown-mobile" id="profile-dropdown-mobile">
+        <ul>
+          <li><a href="{% url 'home:editar_perfil' %}" {% if request.resolver_match.url_name == 'editar_perfil' %}class="ativo"{% endif %}>Meu Perfil</a></li>
+          <li><a href="{% url 'home:meu_perfil_focos' %}" {% if request.resolver_match.url_name == 'meu_perfil_focos' %}class="ativo"{% endif %}>Perfil Focos</a></li>
+          <li class="dropdown-divisor"><hr></li>
+          <li><a href="{% url 'home:logout' %}" class="dropdown-sair">Sair</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="form-container"
+         data-ajax-url="{% url 'home:adicionar_Tarefas' %}"
+         data-csrf-token="{{ csrf_token }}">
+
+        <section class="secao-ia">
+          <h2>Sugestão da IA</h2>
+          <div class="container-gerar-ia">
+            <select id="seletor-foco-ia" aria-label="Selecione o perfil de foco para a IA">
+              <option value="">Selecione um Foco...</option>
+              {% for perfil in perfis_usuario %}
+                <option value="{{ perfil.foco_nome }}">{{ perfil.foco_nome|capfirst }}</option>
+              {% empty %}
+                <option value="" disabled>Cadastre Perfis de Foco primeiro!</option>
+              {% endfor %}
+            </select>
+            <button id="botao-gerar-ia" class="botao-gerar-ia" disabled>Gerar Sugestão</button>
+          </div>
+          <div id="area-sugestao-ia">
+              <p style="color: var(--cor-texto-secundario); font-style: italic;">Selecione um foco e clique em "Gerar Sugestão".</p>
+          </div>
+          <div id="feedback-ia"></div>
+          <button id="botao-aceitar-sugestao" class="botao-aceitar-sugestao">Usar esta Sugestão</button>
+        </section>
+
+        <div class="divisor-ou">
+            <span>OU</span>
+        </div>
+
+        <section class="secao-manual">
+            <h1>Adicionar Nova Tarefa Manualmente</h1>
+
+            <form method="POST" id="form-tarefa">
+                {% csrf_token %}
+                
+                <div class="campo-form">
+                    {{ form.titulo.label_tag }}
+                    {{ form.titulo }}
+                    {% if form.titulo.errors %}<div class="erro-campo">{{ form.titulo.errors }}</div>{% endif %}
+                </div>
+                
+                <div class="campo-form">
+                    {{ form.frequencia.label_tag }}
+                    {{ form.frequencia }}
+                    {% if form.frequencia.errors %}<div class="erro-campo">{{ form.frequencia.errors }}</div>{% endif %}
+                </div>
+
+                <div class="campo-form">
+                    {{ form.hora_lembrete.label_tag }}
+                    {{ form.hora_lembrete }}
+                    {% if form.hora_lembrete.errors %}<div class="erro-campo">{{ form.hora_lembrete.errors }}</div>{% endif %}
+                </div>
+                
+                <div class="campo-form">
+                    {{ form.descricao.label_tag }}
+                    {{ form.descricao }}
+                    {% if form.descricao.errors %}<div class="erro-campo">{{ form.descricao.errors }}</div>{% endif %}
+                </div>
+                
+                <div class="campo-form">
+                    {{ form.xp.label_tag }}
+                    {{ form.xp }}
+                    {% if form.xp.errors %}<div class="erro-campo">{{ form.xp.errors }}</div>{% endif %}
+                </div>
+                
+                <button type="submit" class="submit-button">Salvar Tarefa</button>
+            </form>
+
+            <a href="{% url 'home:lista_Tarefas' %}" class="cancel-link">
+                Cancelar e voltar para a lista
+            </a>
+        </section>
+    </div>
+    
+    <script src="{% static 'home/js/homejs.js' %}"></script>
+    
+    <script src="{% static 'home/js/adicionar_Tarefas.js' %}"></script>
+
+</body>
 </html>

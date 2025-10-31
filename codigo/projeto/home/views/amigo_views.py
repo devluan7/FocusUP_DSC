@@ -6,7 +6,6 @@ from django.contrib import messages
 from django.db.models import Q
 from ..models.usuario import Usuario
 from ..models.amigo import Amigo, PedidoAmizade
-from django.contrib.auth import get_user_model
 
 @login_required
 def buscar_usuarios(request):
@@ -48,7 +47,7 @@ def enviar_pedido_amizade(request, usuario_id):
 @login_required
 def listar_pedidos_amizade(request):
     pedidos = PedidoAmizade.objects.filter(para_usuario=request.user, status='pendente')
-    return render(request, 'home/amigos/pedidos_amizade.html', {'pedidos': pedidos})
+    return render(request, 'home/amigoa/pedidos_amizade.html', {'pedidos': pedidos})
 
 @login_required
 def aceitar_pedido_amizade(request, pedido_id):
@@ -76,60 +75,3 @@ def listar_amigos(request):
     amizades = request.user.amigos.select_related('amigo')
     lista_de_amigos = [amizade.amigo for amizade in amizades]
     return render(request, 'home/amigos/amigos.html', {'amigos': lista_de_amigos})
-@login_required
-def remover_amigo(request, amigo_username):
-    """ Remove a amizade entre o usuário logado e outro usuário """
-    if request.method == 'POST':
-        try:
-            # --- CORREÇÃO AQUI ---
-            # Usa o modelo 'Usuario' importado
-            amigo = Usuario.objects.get(nome_usuario=amigo_username)
-
-            # Verifica se o amigo encontrado é o próprio usuário (não deveria acontecer pela URL, mas é uma segurança extra)
-            if amigo == request.user:
-                 messages.error(request, 'Você não pode remover a si mesmo.')
-                 return redirect('home:listar_amigos')
-
-            # Tenta encontrar a relação de amizade usando o modelo Amigo
-            # (Assumindo que Amigo armazena a relação bidirecionalmente ou tem um jeito de achar)
-            # Ou deleta o PedidoAmizade aceito, como no código original
-
-            # ------ Opção 1: Deletar pelo modelo Amigo (se ele existe e representa a amizade) ------
-            # Amigo.objects.filter(usuario=request.user, amigo=amigo).delete()
-            # Amigo.objects.filter(usuario=amigo, amigo=request.user).delete()
-
-            # ------ Opção 2: Deletar pelo PedidoAmizade aceito (como no código anterior) ------
-            pedido_amizade = PedidoAmizade.objects.filter(
-                (Q(de_usuario=request.user) & Q(para_usuario=amigo) & Q(status='aceito')) |
-                (Q(de_usuario=amigo) & Q(para_usuario=request.user) & Q(status='aceito'))
-            ).first()
-
-            if pedido_amizade:
-                # Se o PedidoAmizade representa a amizade, deletá-lo pode ser suficiente
-                # Ou talvez você precise deletar também as entradas em Amigo
-                Amigo.objects.filter(usuario=request.user, amigo=amigo).delete()
-                Amigo.objects.filter(usuario=amigo, amigo=request.user).delete()
-                pedido_amizade.delete() # Ou apenas marcar como 'removido' se preferir manter histórico
-                messages.success(request, f'Você não é mais amigo de {amigo.nome_usuario}.')
-            else:
-                 # Se não achou PedidoAmizade, talvez a amizade exista só no modelo Amigo? Tente deletar só por ele.
-                 deleted_count1, _ = Amigo.objects.filter(usuario=request.user, amigo=amigo).delete()
-                 deleted_count2, _ = Amigo.objects.filter(usuario=amigo, amigo=request.user).delete()
-                 if deleted_count1 > 0 or deleted_count2 > 0:
-                      messages.success(request, f'Você não é mais amigo de {amigo.nome_usuario}.')
-                 else:
-                      messages.error(request, 'Não foi possível encontrar a amizade para remover.')
-
-
-        # --- CORREÇÃO AQUI ---
-        # Usa o modelo 'Usuario' importado
-        except Usuario.DoesNotExist:
-            messages.error(request, 'Usuário não encontrado.')
-        except Exception as e:
-            messages.error(request, f'Ocorreu um erro ao remover a amizade: {e}')
-
-        return redirect('home:listar_amigos')
-    else:
-        messages.warning(request, 'Ação não permitida.')
-        return redirect('home:listar_amigos')
-        

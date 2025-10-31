@@ -1,11 +1,4 @@
-/* =================================== */
-/* --- Importação de Fontes Modernas --- */
-/* =================================== */
-@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700&display=swap");
-
-/* =================================== */
-/* --- Variáveis de Cor (MODO ESCURO) --- */
-/* =================================== */
+/* --- Variáveis de Cor (MODO ESCURO - Vibrante + Tecnológico) --- */
 :root {
   --cor-fundo: #161a25;
   --cor-secao: #1f2333;
@@ -16,13 +9,11 @@
   --cor-destaque: #ffc93e;
   --cor-texto-preto: #212529;
   --cor-branco: #ffffff;
-  --gradiente-moderno: linear-gradient(135deg, var(--cor-primaria), #7b2cbf);
-  --sombra-padrao: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --cor-erro: #e74c3c;
+  --sombra-elevada: 0 10px 30px rgba(0, 0, 0, 0.2); /* Sombra mais forte */
 }
 
-/* =================================== */
 /* --- Configurações Globais --- */
-/* =================================== */
 * {
   margin: 0;
   padding: 0;
@@ -34,143 +25,210 @@ body {
   background-color: var(--cor-fundo);
   color: var(--cor-texto-secundario);
   line-height: 1.6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem 1rem;
 }
 
-/* =================================== */
-/* --- Estilos de Autenticação (Formulários) --- */
-/* =================================== */
-
-.form-container {
+/* --- Container Principal --- */
+.tela_login {
   width: 100%;
-  max-width: 420px; /* Largura menor para tela de login */
-  margin: 3rem auto;
-  padding: 2rem 2.5rem;
-  background-color: var(--cor-secao);
-  border-radius: 12px;
-  border: 1px solid var(--cor-borda);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.form-logo {
-  text-align: center;
-  margin-bottom: 1.5rem;
+/* --- Bloco de Mensagens Django --- */
+/* (Mesmo estilo que definimos antes, funciona perfeitamente aqui) */
+.container-mensagens {
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto 1.5rem auto;
+  padding: 0;
+  list-style: none;
 }
-.form-logo img {
-  width: 100px;
-  height: auto;
-}
-
-.form-titulo {
+.mensagem {
+  padding: 1rem 1.5rem;
+  margin-bottom: 0; /* Apenas uma mensagem por vez */
+  border-radius: 8px;
   font-family: "Poppins", sans-serif;
-  color: var(--cor-texto-principal);
-  font-size: 2rem;
-  font-weight: 700;
+  font-weight: 600;
+  border: 1px solid transparent;
   text-align: center;
+}
+.mensagem.error { /* Mensagem "Senha inválida" */
+  color: var(--cor-branco);
+  background-color: var(--cor-erro);
+  border-color: #c0392b;
+}
+
+/* --- Card de Login --- */
+.container_login {
+  width: 100%;
+  max-width: 450px;
+  background-color: var(--cor-secao); /* Fundo do card */
+  border: 1px solid var(--cor-borda);
+  border-radius: 16px;
+  padding: 2.5rem 3rem;
+  box-shadow: var(--sombra-elevada); /* Sombra mais destacada */
+  text-align: center;
+}
+
+.logo_login img {
+  max-width: 80px; /* Reduzido um pouco */
+  height: auto;
+  margin-bottom: 1.5rem;
+  /* (Opcional) Efeito de cor:
+   filter: drop-shadow(0 0 10px var(--cor-destaque)); */
+}
+.titulo_login {
+  font-family: "Poppins", sans-serif;
+  font-size: 2rem;
+  color: var(--cor-primaria); /* Azul */
   margin-bottom: 0.5rem;
 }
-
-.form-grupo {
-  margin-bottom: 1.25rem;
+.subtitulo_login {
+  font-size: 1rem;
+  color: var(--cor-texto-secundario);
+  margin-bottom: 2.5rem; /* Mais espaço */
 }
 
-.form-label {
+/* --- Formulário --- */
+.form_login {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* Espaço entre os campos */
+  text-align: left;
+}
+
+.campo_formulario {
+  width: 100%;
+}
+
+.label_formulario {
   display: block;
   font-family: "Poppins", sans-serif;
   font-weight: 600;
-  color: var(--cor-texto-secundario);
+  color: var(--cor-texto-principal);
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
 }
 
-/* Estiliza os inputs diretamente */
-.form-grupo input[type="text"],
-.form-grupo input[type="email"],
-.form-grupo input[type="password"],
-.form-grupo input[type="username"] {
+/* Estilo unificado para os inputs */
+.campo_formulario input[type="text"],
+.campo_formulario input[type="email"],
+.campo_formulario input[type="password"] {
   width: 100%;
-  padding: 0.8rem 1rem;
+  padding: 0.85rem 1rem;
   font-family: "Lato", sans-serif;
   font-size: 1rem;
   color: var(--cor-texto-principal);
-  background-color: var(--cor-fundo);
+  background-color: var(--cor-fundo); /* Fundo mais escuro */
   border: 1px solid var(--cor-borda);
   border-radius: 8px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box; /* Garante padding correto */
 }
-
-.form-grupo input:focus {
+.campo_formulario input:focus {
   outline: none;
   border-color: var(--cor-primaria);
-  box-shadow: 0 0 0 3px rgba(90, 72, 245, 0.25);
+  box-shadow: 0 0 0 3px rgba(90, 72, 245, 0.2);
+}
+/* Placeholder com cor mais sutil */
+.campo_formulario input::placeholder {
+    color: var(--cor-texto-secundario);
+    opacity: 0.7;
 }
 
-.input-com-icone {
-  position: relative;
+
+/* Olho da Senha (CORRIGIDO) */
+.input_olho {
+  position: relative; /* Container do input + olho */
+  display: flex;
+  width: 100%;
 }
-.input-com-icone .input-icone {
+.input_olho input[type="password"] {
+  padding-right: 3.5rem; /* Deixa espaço para o olho dentro do input */
+}
+.olho {
   position: absolute;
+  right: 1rem; /* Posiciona o olho dentro do input */
   top: 50%;
-  right: 15px;
   transform: translateY(-50%);
-  color: var(--cor-texto-secundario);
   cursor: pointer;
+  color: var(--cor-texto-secundario);
   user-select: none;
+  font-size: 1.25rem; /* Aumenta um pouco o olho */
 }
-.input-com-icone .input-icone:hover {
+.olho:hover {
   color: var(--cor-texto-principal);
 }
-.input-com-icone input[type="password"] {
-  padding-right: 2.5rem;
-}
 
-.form-error {
-  color: #ff6b6b;
+/* Erros de campo (não os de mensagem) */
+.erro_campo {
+  margin-top: 0.5rem;
+  font-family: "Poppins", sans-serif;
   font-size: 0.85rem;
   font-weight: 600;
-  margin-top: 0.35rem;
-  list-style-type: none;
-  padding: 0;
-  margin-bottom: 0;
-  text-align: center; /* Erros de login ficam melhor centralizados */
+  color: var(--cor-erro);
 }
 
-.form-link {
-  color: var(--cor-primaria);
-  font-weight: 600;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-.form-link:hover {
-  color: var(--cor-branco);
-  text-decoration: underline;
-}
-
-.form-texto {
-  font-size: 0.95rem;
-  color: var(--cor-texto-secundario);
-  text-align: center;
-  margin-top: 2rem;
-}
-
-/* =================================== */
-/* --- Botões (Copiados do seu CSS 'home') --- */
-/* =================================== */
-
-.botao-destaque {
+/* Botão de Login */
+.botao_login {
   display: inline-block;
-  background-color: var(--cor-destaque);
+  width: 100%;
+  background-color: var(--cor-destaque); /* Amarelo */
   color: var(--cor-texto-preto);
-  padding: 0.75rem 1.5rem;
+  padding: 0.85rem 1.5rem;
+  border: none;
   border-radius: 8px;
   text-decoration: none;
   font-weight: 700;
   font-family: "Poppins", sans-serif;
-  font-size: 0.9rem;
+  font-size: 1rem;
   text-align: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border: none;
   cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 1rem;
 }
-.botao-destaque:hover {
+.botao_login:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 15px rgba(255, 201, 62, 0.4);
+}
+
+/* Links Auxiliares (Esqueceu a senha, Cadastre-se) */
+.links_auxiliares {
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}
+.links_auxiliares p {
+    margin-bottom: 0.5rem;
+    color: var(--cor-texto-secundario);
+}
+.links_auxiliares a {
+  color: var(--cor-destaque); /* Destaque amarelo */
+  font-weight: 700;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+.links_auxiliares a:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+/* --- Responsividade (Mobile) --- */
+@media (max-width: 768px) {
+  body {
+    padding: 1rem;
+    align-items: flex-start;
+  }
+  .container_login {
+    padding: 2rem 1.5rem;
+  }
+  .titulo_login {
+    font-size: 1.75rem;
+  }
 }

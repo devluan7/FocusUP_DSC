@@ -5,130 +5,130 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cadastro - FocusUP</title>
-
     <link rel="stylesheet" href="{% static 'home/css/estilocadastro.css' %}" />
   </head>
   <body>
-    <div class="form-container">
-      <div class="form-logo">
-        <img src="{% static 'home/img/Logo.png' %}" alt="Logo FocusUP" />
+    <div class="tela_cadastro">
+      <div class="container_cadastro">
+        <div class="logo_cadastro">
+          <img src="{% static 'home/img/Logo.png' %}" alt="Logo FocusUP" />
+        </div>
+
+        <h1 class="titulo_cadastro">Crie sua conta</h1>
+        <p class="subtitulo_cadastro">
+          Comece sua jornada e evolua no FocusUP!
+        </p>
+
+        <form class="form_cadastro" method="POST" novalidate>
+          {% csrf_token %}
+
+          <div class="campo_formulario">
+            <label for="{{ form.nome.id_for_label }}" class="label_formulario"
+              >Nome completo</label
+            >
+            {{ form.nome }} {% if form.nome.errors %}
+            <div class="erro_campo">{{ form.nome.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="campo_formulario">
+            <label
+              for="{{ form.nome_usuario.id_for_label }}"
+              class="label_formulario"
+              >Nome de usuário</label
+            >
+            {{ form.nome_usuario }} {% if form.nome_usuario.errors %}
+            <div class="erro_campo">{{ form.nome_usuario.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="campo_formulario">
+            <label for="{{ form.email.id_for_label }}" class="label_formulario"
+              >E-mail</label
+            >
+            {{ form.email }} {% if form.email.errors %}
+            <div class="erro_campo">{{ form.email.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="campo_formulario">
+            <label
+              for="{{ form.password1.id_for_label }}"
+              class="label_formulario"
+              >Senha</label
+            >
+            <div class="input_olho">
+              {{ form.password1 }}
+              <span
+                class="olho"
+                onclick="toggleSenha('{{ form.password1.id_for_label }}')"
+                >&#128065;</span
+              >
+            </div>
+            {% if form.password1.errors %}
+            <div class="erro_campo">{{ form.password1.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="campo_formulario">
+            <label
+              for="{{ form.password2.id_for_label }}"
+              class="label_formulario"
+              >Confirmar senha</label
+            >
+            <div class="input_olho">
+              {{ form.password2 }}
+              <span
+                class="olho"
+                onclick="toggleSenha('{{ form.password2.id_for_label }}')"
+                >&#128065;</span
+              >
+            </div>
+            {% if form.password2.errors %}
+            <div class="erro_campo">{{ form.password2.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="campo_formulario">
+            <label for="{{ form.sexo.id_for_label }}" class="label_formulario"
+              >Sexo</label
+            >
+            {{ form.sexo }} {% if form.sexo.errors %}
+            <div class="erro_campo">{{ form.sexo.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="campo_formulario">
+            <label
+              for="{{ form.data_nascimento.id_for_label }}"
+              class="label_formulario"
+              >Data de nascimento</label
+            >
+            {{ form.data_nascimento }} {% if form.data_nascimento.errors %}
+            <div class="erro_campo">{{ form.data_nascimento.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="campo_formulario checkbox_termos">
+            <label>
+              <input type="checkbox" name="termos" required />
+              Aceito os
+              <a href="/termos" class="link_termos" target="_blank"
+                >Termos de Uso</a
+              >
+            </label>
+          </div>
+
+          <button type="submit" class="botao_cadastro">Cadastrar</button>
+        </form>
+
+        <div class="links_auxiliares_cadastro">
+          <p class="texto_login">
+            Já possui uma conta?
+            <a href="{% url 'home:login' %}" class="link_login">Entrar</a>
+          </p>
+        </div>
       </div>
-
-      <h1 class="form-titulo">Crie sua conta</h1>
-      <p class="form-texto" style="margin-top: -0.5rem; margin-bottom: 2rem">
-        Comece sua jornada e evolua no FocusUP!
-      </p>
-
-      <form method="POST" novalidate>
-        {% csrf_token %}
-
-        <div class="form-grupo">
-          <label for="{{ form.nome.id_for_label }}" class="form-label">
-            Nome completo
-          </label>
-          {{ form.nome }} {% if form.nome.errors %}
-          <div class="form-error">{{ form.nome.errors }}</div>
-          {% endif %}
-        </div>
-
-        <div class="form-grupo">
-          <label for="{{ form.nome_usuario.id_for_label }}" class="form-label">
-            Nome de usuário
-          </label>
-          {{ form.nome_usuario }} {% if form.nome_usuario.errors %}
-          <div class="form-error">{{ form.nome_usuario.errors }}</div>
-          {% endif %}
-        </div>
-
-        <div class="form-grupo">
-          <label for="{{ form.email.id_for_label }}" class="form-label">
-            E-mail
-          </label>
-          {{ form.email }} {% if form.email.errors %}
-          <div class="form-error">{{ form.email.errors }}</div>
-          {% endif %}
-        </div>
-
-        <div class="form-grupo">
-          <label for="{{ form.password1.id_for_label }}" class="form-label">
-            Senha
-          </label>
-          <div class="input-com-icone">
-            {{ form.password1 }}
-            <span
-              class="input-icone"
-              onclick="toggleSenha('{{ form.password1.id_for_label }}')"
-            >
-              &#128065;
-            </span>
-          </div>
-          {% if form.password1.errors %}
-          <div class="form-error">{{ form.password1.errors }}</div>
-          {% endif %}
-        </div>
-
-        <div class="form-grupo">
-          <label for="{{ form.password2.id_for_label }}" class="form-label">
-            Confirmar senha
-          </label>
-          <div class="input-com-icone">
-            {{ form.password2 }}
-            <span
-              class="input-icone"
-              onclick="toggleSenha('{{ form.password2.id_for_label }}')"
-            >
-              &#128065;
-            </span>
-          </div>
-          {% if form.password2.errors %}
-          <div class="form-error">{{ form.password2.errors }}</div>
-          {% endif %}
-        </div>
-
-        <div class="form-grupo">
-          <label for="{{ form.sexo.id_for_label }}" class="form-label">
-            Sexo
-          </label>
-          {{ form.sexo }} {% if form.sexo.errors %}
-          <div class="form-error">{{ form.sexo.errors }}</div>
-          {% endif %}
-        </div>
-
-        <div class="form-grupo">
-          <label
-            for="{{ form.data_nascimento.id_for_label }}"
-            class="form-label"
-          >
-            Data de nascimento
-          </label>
-          {{ form.data_nascimento }} {% if form.data_nascimento.errors %}
-          <div class="form-error">{{ form.data_nascimento.errors }}</div>
-          {% endif %}
-        </div>
-
-        <div class="form-checkbox">
-          <input type="checkbox" name="termos" id="termos" required />
-          <label for="termos">
-            Aceito os
-            <a href="/termos" class="form-link" target="_blank">
-              Termos de Uso
-            </a>
-          </label>
-        </div>
-
-        <button
-          type="submit"
-          class="botao-destaque"
-          style="width: 100%; margin-top: 1rem"
-        >
-          Cadastrar
-        </button>
-      </form>
-
-      <p class="form-texto">
-        Já possui uma conta?
-        <a href="{% url 'home:login' %}" class="form-link">Entrar</a>
-      </p>
     </div>
 
     <script src="{% static 'home/js/menucadastro.js' %}"></script>
