@@ -1,0 +1,269 @@
+/* --- Variáveis de Cor (MODO ESCURO) --- */
+:root {
+  --cor-fundo: #161a25;
+  --cor-secao: #1f2333;
+  --cor-texto-principal: #f8f9fa;
+  --cor-texto-secundario: #a9b1d6;
+  --cor-borda: #343b58;
+  --cor-primaria: #5a48f5;
+  --cor-destaque: #ffc93e;
+  --cor-texto-preto: #212529;
+  --cor-branco: #ffffff;
+  --gradiente-moderno: linear-gradient(
+    135deg,
+    var(--cor-primaria),
+    #7b2cbf
+  );
+  --sombra-padrao: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Configurações Globais --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Lato", sans-serif;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto-secundario);
+  line-height: 1.6;
+}
+
+/* --- Estilos do NOVO Cabeçalho --- */
+.cabecalho-principal {
+  background-color: var(--cor-secao);
+  border-bottom: 1px solid var(--cor-borda);
+  padding: 1rem 0;
+  width: 100%;
+}
+
+.container-cabecalho {
+  /* Largura máxima padrão para o cabeçalho */
+  max-width: 1300px; 
+  margin: 0 auto;
+  /* Padding padrão para o cabeçalho */
+  padding: 0 1.5rem; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--cor-destaque);
+  text-decoration: none;
+}
+
+.navegacao-principal ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.navegacao-principal a {
+  text-decoration: none;
+  color: var(--cor-texto-secundario);
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: color 0.2s ease;
+}
+
+.navegacao-principal a:hover,
+.navegacao-principal a.ativo {
+  color: var(--cor-branco);
+}
+/* --- Fim dos Estilos do Cabeçalho --- */
+
+/* --- Estrutura do Painel (Dashboard) --- */
+.painel-container {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 2rem;
+  max-width: 1300px;
+  margin: 2rem auto; 
+  padding: 0 1.5rem;
+}
+
+.painel-principal {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.painel-lateral {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.secao {
+  background-color: var(--cor-secao);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  border: 1px solid var(--cor-borda);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  color: var(--cor-primaria);
+  margin-bottom: 0.75rem;
+}
+.titulo_main { font-size: 2.25rem; }
+h2 { font-size: 1.5rem; }
+p { margin-bottom: 1rem; color: var(--cor-texto-secundario); }
+p:last-child { margin-bottom: 0; }
+
+.destaque-gradiente {
+  background: var(--gradiente-moderno);
+  border: none;
+}
+.destaque-gradiente h1,
+.destaque-gradiente p { color: var(--cor-branco); }
+.frase_motivation { font-size: 1.1rem; opacity: 0.9; }
+
+.usuario-avatar-nome {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  font-family: "Poppins", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--cor-texto-principal);
+}
+.avatar-placeholder {
+  width: 55px;
+  height: 55px;
+  background-color: var(--cor-fundo);
+  border-radius: 50%;
+  border: 3px solid var(--cor-primaria);
+  flex-shrink: 0;
+}
+.usuario-stats {
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+  border-top: 1px solid var(--cor-borda);
+  padding-top: 1.5rem;
+}
+.stat-numero {
+  display: block;
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-family: "Poppins", sans-serif;
+  color: var(--cor-destaque);
+  line-height: 1.2;
+}
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--cor-texto-secundario);
+  text-transform: uppercase;
+}
+
+.barra-progresso { margin-top: 1rem; }
+.barra-progresso small {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--cor-texto-secundario);
+}
+.barra-fundo {
+  width: 100%;
+  height: 20px;
+  background-color: var(--cor-fundo);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+  border: 1px solid var(--cor-borda);
+}
+.barra-preenchimento {
+  height: 100%;
+  background: var(--gradiente-moderno);
+  border-radius: 10px;
+  color: var(--cor-branco);
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.5s ease-out;
+}
+
+.botao-destaque {
+  display: inline-block;
+  background-color: var(--cor-destaque);
+  color: var(--cor-texto-preto);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.botao-destaque:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(255, 201, 62, 0.4);
+}
+.botao-secundario {
+  display: inline-block;
+  background-color: transparent;
+  color: var(--cor-primaria);
+  border: 2px solid var(--cor-primaria);
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  text-align: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.botao-secundario:hover {
+  background-color: var(--cor-primaria);
+  color: var(--cor-texto-principal);
+}
+
+/* --- Ajustes para Telas Menores (Responsividade) --- */
+@media (max-width: 992px) {
+  /* Responsividade do Cabeçalho */
+  .cabecalho-principal {
+    padding: 1rem;
+  }
+  .container-cabecalho {
+    padding: 0;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* Responsividade da Página */
+  .painel-container {
+    grid-template-columns: 1fr;
+    margin-top: 1rem;
+    gap: 1.5rem;
+  }
+  .painel-lateral { order: -1; }
+  .secao { padding: 1.25rem 1.5rem; }
+  .titulo_main { font-size: 1.75rem; }
+  h2 { font-size: 1.25rem; }
+  .usuario-avatar-nome { font-size: 1.15rem; }
+  .avatar-placeholder { width: 50px; height: 50px; }
+  .stat-numero { font-size: 1.5rem; }
+}
+
+.badge-notificacao {
+  background-color: var(--cor-perigo); /* Vermelho */
+  color: var(--cor-branco);
+  border-radius: 50%;
+  padding: 0.1em 0.5em;
+  font-size: 0.75rem;
+  font-weight: bold;
+  margin-left: 0.5em;
+  vertical-align: super;
+}

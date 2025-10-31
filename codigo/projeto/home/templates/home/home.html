@@ -1,0 +1,81 @@
+{% extends 'home/base.html' %} {# <-- 1. HERDA DO BASE.HTML #}
+{% load static %}
+
+{# O <head> e <header> são herdados, não precisamos deles aqui #}
+
+{% block title %}FocusUP - Painel{% endblock %} {# Define o título específico desta página #}
+
+{% block content %} {# <-- 2. COLOCA O CONTEÚDO DENTRO DO BLOCO #}
+    <div class="painel-container"> {# Mantém o container específico do painel #}
+        <main class="painel-principal">
+            <section id="inicioID" class="secao destaque-gradiente">
+                <h1 class="titulo_main">Bem-vindo, {{ user.nome_usuario }}!</h1>
+                <p id="frase_motivation" class="frase_motivation">
+                    Continue sua jornada e conquiste seus objetivos.
+                </p>
+            </section>
+
+            <section id="tarefasID" class="secao">
+                <h2>Suas Tarefas</h2>
+                <p>Aqui vão aparecer as tarefas pendentes.</p>
+                <a href="{% url 'home:lista_Tarefas' %}" class="botao-destaque">
+                    Ver todas as tarefas
+                </a>
+            </section>
+
+            <section id="evolucaoID" class="secao">
+                <h2>Sua Evolução</h2>
+                <p>
+                    Aqui você pode colocar gráficos ou barras de progresso das suas
+                    conquistas e XP.
+                </p>
+                <div class="barra-progresso">
+                    <small>Progresso do Nível</small>
+                    <div class="barra-fundo">
+                        <div class="barra-preenchimento" style="width: 45%">45%</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <aside class="painel-lateral">
+            <div id="perfilID" class="secao bloco-usuario">
+                <div class="usuario-avatar-nome">
+                    <div class="avatar-placeholder"></div>
+                    <span>{{ user.nome_usuario }}</span>
+                </div>
+                <div class="usuario-stats">
+                    <div class="stat-item">
+                        <span class="stat-numero">1.250</span>
+                        <small class="stat-label">XP Total</small>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-numero">12</span>
+                        <small class="stat-label">Dias de Foco</small>
+                    </div>
+                </div>
+            </div>
+
+            <section id="amigosID" class="secao">
+                <h2>Amigos</h2>
+                <a href="{% url 'home:listar_amigos' %}" class="botao-secundario" style="margin-bottom: 0.75rem; display: block; text-align: center;">Ver Amigos</a>
+                <a href="{% url 'home:buscar_usuarios' %}" class="botao-secundario" style="margin-bottom: 0.75rem; display: block; text-align: center;">Buscar Usuários</a>
+                <a href="{% url 'home:listar_pedidos_amizade' %}" class="botao-secundario" style="display: block; text-align: center;">Pedidos Pendentes</a>
+            </section>
+
+            <section id="lojaID" class="secao">
+                <h2>Loja</h2>
+                <p>Itens virtuais para seu avatar.</p>
+                <a href="#" class="botao-secundario">Ir para a Loja</a>
+            </section>
+
+            <section id="configID" class="secao">
+                <h2>Configurações</h2>
+                <p>Preferências da sua conta.</p>
+                <a href="#" class="botao-secundario">Ajustar Conta</a>
+            </section>
+        </aside>
+    </div>
+{% endblock %} {# <-- 3. FECHA O BLOCO DE CONTEÚDO #}
+
+{# Os scripts agora são herdados do base.html, não precisamos deles aqui #}

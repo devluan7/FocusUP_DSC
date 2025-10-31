@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - FocusUP</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="{% static 'home/css/estilologin.css' %}" />
+  </head>
+  <body>
+    <div class="form-container">
+      <div class="form-logo">
+        <img src="{% static 'home/img/Logo.png' %}" alt="Logo FocusUP" />
+      </div>
+
+      <h1 class="form-titulo">Bem-vindo de volta!</h1>
+      <p class="form-texto" style="margin-top: -0.5rem; margin-bottom: 2rem">
+        Entre com sua conta para continuar
+      </p>
+
+      <form action="" method="POST">
+        {% csrf_token %}
+
+        <div class="form-grupo">
+          <label for="id_username" class="form-label">
+            Email ou Nome de Usuário
+          </label>
+          <input
+            type="text"
+            id="id_username"
+            name="username"
+            placeholder="Digite seu email ou nome de usuário"
+            required
+          />
+        </div>
+
+        <div class="form-grupo">
+          <label for="id_password" class="form-label">Senha</label>
+          <div class="input-com-icone">
+            <input
+              type="password"
+              id="id_password"
+              name="password"
+              placeholder="Digite sua senha"
+              required
+            />
+            <span class="input-icone" onclick="toggleSenha('id_password')">
+              &#128065;
+            </span>
+          </div>
+        </div>
+
+        {% if form.non_field_errors %}
+        <div class="form-error">{{ form.non_field_errors }}</div>
+        {% endif %} {% if erro %}
+        <div class="form-error">{{ erro }}</div>
+        {% endif %}
+
+        <button
+          type="submit"
+          class="botao-destaque"
+          style="width: 100%; margin-top: 1rem"
+        >
+          Entrar
+        </button>
+      </form>
+
+      <p class="form-texto" style="margin-top: 1.5rem; margin-bottom: 0.5rem">
+        <a href="{% url 'password_reset' %}" class="form-link">
+          Esqueceu sua senha?
+        </a>
+      </p>
+
+      <p class="form-texto" style="margin-top: 0.5rem">
+        Não tem uma conta?
+        <a href="{% url 'home:cadastro' %}" class="form-link">Cadastre-se</a>
+      </p>
+    </div>
+
+    <script src="{% static 'home/js/menucadastro.js' %}"></script>
+  </body>
+</html>

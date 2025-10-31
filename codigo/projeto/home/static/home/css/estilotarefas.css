@@ -1,0 +1,252 @@
+/* --- Variáveis de Cor (MODO ESCURO) --- */
+:root {
+  --cor-fundo: #161a25;
+  --cor-secao: #1f2333;
+  --cor-texto-principal: #f8f9fa;
+  --cor-texto-secundario: #a9b1d6;
+  --cor-borda: #343b58;
+  --cor-primaria: #5a48f5;
+  --cor-destaque: #ffc93e;
+  --cor-texto-preto: #212529;
+  --cor-branco: #ffffff;
+  --cor-verde-sucesso: #28a745;
+  --cor-texto-sucesso: #ffffff;
+}
+
+/* --- Configurações Globais --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Lato", sans-serif;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto-secundario);
+  line-height: 1.6;
+}
+
+/* --- Estilos do NOVO Cabeçalho --- */
+.cabecalho-principal {
+  background-color: var(--cor-secao);
+  border-bottom: 1px solid var(--cor-borda);
+  padding: 1rem 0;
+  width: 100%;
+}
+
+.container-cabecalho {
+  /* Largura máxima padrão para o cabeçalho - CORRIGIDO */
+  max-width: 1300px; 
+  margin: 0 auto;
+  /* Padding padrão para o cabeçalho - CORRIGIDO */
+  padding: 0 1.5rem; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--cor-destaque);
+  text-decoration: none;
+}
+
+.navegacao-principal ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.navegacao-principal a {
+  text-decoration: none;
+  color: var(--cor-texto-secundario);
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: color 0.2s ease;
+}
+
+.navegacao-principal a:hover,
+.navegacao-principal a.ativo {
+  color: var(--cor-branco);
+}
+/* --- Fim dos Estilos do Cabeçalho --- */
+
+
+/* --- Container Principal da Página de Tarefas --- */
+.container-tarefas {
+  /* O conteúdo das tarefas é mais estreito, mas o cabeçalho acima é largo */
+  max-width: 800px; 
+  margin: 2rem auto; 
+  padding: 0 1rem; 
+}
+
+.container-tarefas h1 {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  color: var(--cor-primaria);
+  font-size: 2.25rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* --- Lista de Tarefas --- */
+.lista-tarefas {
+  list-style: none;
+  padding: 0;
+  margin-top: 1.5rem;
+}
+
+/* ... (O resto do CSS de tarefas.html) ... */
+
+.item-tarefa {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  background-color: var(--cor-secao);
+  border: 1px solid var(--cor-borda);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.item-tarefa:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.tarefa-info { flex-grow: 1; }
+.tarefa-titulo {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--cor-texto-principal);
+  display: block;
+  margin-bottom: 0.5rem;
+  transition: color 0.2s ease;
+}
+.tarefa-detalhes p {
+  font-size: 0.9rem;
+  color: var(--cor-texto-secundario);
+  margin: 0;
+  line-height: 1.4;
+}
+.tarefa-detalhes p strong {
+  color: var(--cor-texto-principal);
+  font-weight: 600;
+}
+
+.formulario-concluir { flex-shrink: 0; }
+.botao-tarefa {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.botao-concluir {
+  background-color: var(--cor-verde-sucesso);
+  color: var(--cor-texto-sucesso);
+  border-color: var(--cor-verde-sucesso);
+}
+.botao-concluir:hover { background-color: #218838; border-color: #218838; }
+.botao-desmarcar {
+  background-color: transparent;
+  color: var(--cor-texto-secundario);
+  border-color: var(--cor-borda);
+}
+.botao-desmarcar:hover {
+  background-color: var(--cor-secao);
+  border-color: var(--cor-texto-secundario);
+  color: var(--cor-texto-principal);
+}
+
+.item-tarefa.concluida { opacity: 0.6; }
+.item-tarefa.concluida .tarefa-titulo {
+  text-decoration: line-through;
+  color: var(--cor-texto-secundario);
+}
+
+.item-tarefa-vazia {
+  background-color: var(--cor-secao);
+  border: 2px dashed var(--cor-borda);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  color: var(--cor-texto-secundario);
+}
+.item-tarefa-vazia p:first-child {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--cor-texto-principal);
+}
+
+.links-navegacao { text-align: center; margin-top: 2rem; }
+.link-botao {
+  display: inline-block;
+  text-decoration: none;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.link-adicionar {
+  background-color: var(--cor-destaque);
+  color: var(--cor-texto-preto);
+  display: block;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.link-adicionar:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(255, 201, 62, 0.4);
+}
+.link-voltar {
+  background-color: transparent;
+  color: var(--cor-primaria);
+  border: 2px solid var(--cor-primaria);
+}
+.link-voltar:hover {
+  background-color: var(--cor-primaria);
+  color: var(--cor-branco);
+}
+
+/* --- Ajustes para Telas Menores (Responsividade) --- */
+@media (max-width: 992px) {
+  /* Responsividade do Cabeçalho */
+  .cabecalho-principal {
+    padding: 1rem;
+  }
+  .container-cabecalho {
+    padding: 0;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  /* Responsividade da Página */
+  .container-tarefas { margin-top: 1.5rem; }
+  .container-tarefas h1 { font-size: 1.75rem; }
+  .item-tarefa {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+  .tarefa-info { text-align: center; }
+  .tarefa-detalhes p { font-size: 0.85rem; }
+  .formulario-concluir,
+  .botao-tarefa { width: 100%; }
+  .link-botao { padding: 0.8rem 1rem; font-size: 0.9rem; }
+  .link-adicionar { margin-bottom: 1.5rem; }
+}

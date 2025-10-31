@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minhas Tarefas - FocusUP</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="{% static 'home/css/estilotarefas.css' %}" />
+  </head>
+  <body>
+    
+    <header class="cabecalho-principal">
+      <div class="container-cabecalho">
+        <a href="{% url 'home:home' %}" class="logo">FocusUP</a>
+        <nav class="navegacao-principal">
+          <ul>
+            <li><a href="{% url 'home:home' %}">Painel</a></li>
+            <li>
+              <a href="{% url 'home:lista_Tarefas' %}" class="ativo">Tarefas</a>
+            </li>
+            <li><a href="#">Loja</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <div class="container-tarefas">
+      <h1>Minhas Tarefas</h1>
+
+      <a
+        href="{% url 'home:adicionar_Tarefas' %}"
+        class="link-adicionar link-botao"
+      >
+        Adicionar Nova Tarefa
+      </a>
+
+      <ul class="lista-tarefas">
+        {% for tarefa in tarefas %}
+        <li class="item-tarefa {% if tarefa.concluida %}concluida{% endif %}">
+          <div class="tarefa-info">
+            <span class="tarefa-titulo"> {{ tarefa.titulo }} </span>
+            <div class="tarefa-detalhes">
+              {% if tarefa.descricao %}
+              <p><strong>Descrição:</strong> {{ tarefa.descricao }}</p>
+              {% endif %}
+              <p>
+                <strong>Frequência:</strong> {{ tarefa.get_frequencia_display }}
+                | <strong>Lembrete às:</strong> {{ tarefa.hora_lembrete }}
+              </p>
+            </div>
+          </div>
+
+          <form
+            method="POST"
+            action="{% url 'home:concluir_tarefa' tarefa.id_Tarefa %}"
+            class="formulario-concluir"
+          >
+            {% csrf_token %} {% if tarefa.concluida %}
+            <button type="submit" class="botao-tarefa botao-desmarcar">
+              Desmarcar
+            </button>
+            {% else %}
+            <button type="submit" class="botao-tarefa botao-concluir">
+              Concluir
+            </button>
+            {% endif %}
+          </form>
+        </li>
+        {% empty %}
+        <li class="item-tarefa-vazia">
+          <p>Você ainda não tem tarefas cadastradas.</p>
+          <p>Clique em "Adicionar Nova Tarefa" para começar!</p>
+        </li>
+        {% endfor %}
+      </ul>
+
+      <div class="links-navegacao">
+        <a href="{% url 'home:home' %}" class="link-voltar link-botao">
+          Voltar para o Painel
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

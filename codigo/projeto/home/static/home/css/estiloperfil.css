@@ -1,0 +1,355 @@
+/* --- Variáveis de Cor (MODO ESCURO) --- */
+:root {
+  --cor-fundo: #161a25;
+  --cor-secao: #1f2333;
+  --cor-texto-principal: #f8f9fa;
+  --cor-texto-secundario: #a9b1d6;
+  --cor-borda: #343b58;
+  --cor-borda-tracejada: #4a5578; /* Um pouco mais clara para o tracejado */
+  --cor-primaria: #5a48f5;
+  --cor-destaque: #ffc93e;
+  --cor-texto-preto: #212529;
+  --cor-branco: #ffffff;
+  --cor-sucesso: #28a745;
+  --cor-erro: #e74c3c; /* Um vermelho mais vibrante */
+}
+
+/* --- Configurações Globais --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Lato", sans-serif;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto-secundario);
+  line-height: 1.6;
+}
+
+/* --- Estilos IDÊNTICOS do Cabeçalho --- */
+.cabecalho-principal {
+  background-color: var(--cor-secao);
+  border-bottom: 1px solid var(--cor-borda);
+  padding: 1rem 0;
+  width: 100%;
+}
+
+.container-cabecalho {
+  max-width: 1300px; 
+  margin: 0 auto;
+  padding: 0 1.5rem; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--cor-destaque);
+  text-decoration: none;
+}
+
+.navegacao-principal ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.navegacao-principal a {
+  text-decoration: none;
+  color: var(--cor-texto-secundario);
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: color 0.2s ease;
+}
+
+.navegacao-principal a:hover,
+.navegacao-principal a.ativo {
+  color: var(--cor-branco);
+}
+/* --- Fim dos Estilos do Cabeçalho --- */
+
+/* --- Container Principal da Página --- */
+.container-perfil {
+  width: 100%;
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* --- Bloco de Mensagens Django --- */
+.container-mensagens { width: 100%; }
+.mensagem {
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+.mensagem.success {
+  color: var(--cor-texto-principal);
+  background-color: var(--cor-sucesso);
+  border-color: #23923d;
+}
+.mensagem.error {
+  color: var(--cor-texto-principal);
+  background-color: var(--cor-erro);
+  border-color: #c0392b;
+}
+.mensagem.warning {
+  color: var(--cor-texto-preto);
+  background-color: var(--cor-destaque);
+  border-color: #e0b036;
+}
+.mensagem.info {
+  color: var(--cor-texto-principal);
+  background-color: var(--cor-primaria);
+  border-color: #4a39d4;
+}
+
+/* --- Estilo das Seções (Cards) --- */
+.secao {
+  background-color: var(--cor-secao);
+  border: 1px solid var(--cor-borda);
+  border-radius: 12px;
+  padding: 2rem 2.5rem;
+  width: 100%;
+}
+
+.secao h2 {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  color: var(--cor-primaria);
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+/* --- Seção Lista de Perfis (ATUALIZADA) --- */
+.lista-perfis { list-style: none; padding: 0; }
+.perfil-item {
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--cor-borda);
+}
+.lista-perfis .perfil-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+.perfil-nome {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--cor-destaque);
+  margin-bottom: 0.25rem;
+}
+.perfil-detalhes {
+  font-size: 0.9rem;
+  color: var(--cor-texto-secundario);
+}
+.perfil-detalhes strong {
+  color: var(--cor-texto-secundario);
+}
+
+.perfil-dados-extras {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--cor-borda-tracejada);
+}
+.perfil-dados-extras strong {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  color: var(--cor-texto-principal);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.perfil-dados-extras ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.perfil-dados-extras li {
+  margin-bottom: 0.25rem;
+}
+
+.perfil-vazio { text-align: center; padding: 1rem; }
+.perfil-vazio p:first-child {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  color: var(--cor-texto-principal);
+  font-size: 1.1rem;
+}
+
+/* --- Seção Formulário (ATUALIZADA) --- */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem; /* Espaço entre os .campo-form */
+}
+
+.campo-form {
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+.campo-form label {
+  display: block;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  color: var(--cor-texto-principal);
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* Estilo unificado para inputs, selects, textareas */
+.campo-form input[type="text"],
+.campo-form input[type="number"],
+.campo-form select,
+.campo-form textarea {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  font-family: "Lato", sans-serif;
+  font-size: 1rem;
+  color: var(--cor-texto-principal);
+  background-color: var(--cor-fundo); 
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Foco para os campos */
+.campo-form input:focus,
+.campo-form select:focus,
+.campo-form textarea:focus {
+  outline: none;
+  border-color: var(--cor-primaria);
+  box-shadow: 0 0 0 3px rgba(90, 72, 245, 0.2);
+}
+
+textarea { resize: vertical; min-height: 100px; }
+
+/* Estilos para listas de checkboxes */
+.campo-form ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.campo-form ul li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.campo-form ul li input[type="checkbox"] {
+  width: auto;
+  accent-color: var(--cor-primaria);
+}
+.campo-form ul li label {
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  color: var(--cor-texto-secundario);
+  margin-bottom: 0; 
+}
+
+/* --- CORREÇÃO AQUI --- */
+/* Estilos para os campos escondidos */
+.campos-especificos {
+  display: none; /* Começa escondido (default) */
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed var(--cor-borda-tracejada); /* Separador */
+  
+  /* Essas regras serão aplicadas quando o JS mudar para display: flex */
+  flex-direction: column;
+  gap: 1.25rem; /* Espaço entre os campos internos */
+}
+/* --- FIM DA CORREÇÃO --- */
+
+.campos-especificos h4 {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--cor-destaque);
+  margin-bottom: 0.5rem;
+}
+
+/* Estilos para erros do Django */
+.errorlist {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--cor-erro);
+}
+.campo-form .errorlist li {
+  margin: 0; 
+  gap: 0; 
+}
+
+
+/* Botão de Submit */
+.submit-button {
+  display: inline-block;
+  width: 100%;
+  background-color: var(--cor-destaque);
+  color: var(--cor-texto-preto);
+  padding: 0.85rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 1rem;
+}
+.submit-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(255, 201, 62, 0.4);
+}
+
+
+/* --- Ajustes para Telas Menores (Responsividade) --- */
+@media (max-width: 992px) {
+  /* Responsividade IDÊNTICA do Cabeçalho */
+  .cabecalho-principal {
+    padding: 1rem;
+  }
+  .container-cabecalho {
+    padding: 0;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* Responsividade da Página */
+  .container-perfil {
+    margin-top: 1rem;
+    padding: 0 0.5rem;
+    gap: 1.5rem;
+  }
+  .secao {
+    padding: 1.5rem;
+  }
+  .secao h2 {
+    font-size: 1.5rem;
+  }
+  .campos-especificos h4 {
+    font-size: 1.1rem;
+  }
+}

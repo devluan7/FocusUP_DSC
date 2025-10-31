@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adicionar Tarefa - FocusUP</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'home/css/estiloaddtarefa.css' %}" />
+  </head>
+  <body>
+    
+    <header class="cabecalho-principal">
+      <div class="container-cabecalho">
+        <a href="{% url 'home:home' %}" class="logo">FocusUP</a>
+        <nav class="navegacao-principal">
+          <ul>
+            <li><a href="{% url 'home:home' %}">Painel</a></li>
+            <li>
+              <a href="{% url 'home:lista_Tarefas' %}" class="ativo">Tarefas</a>
+            </li>
+            <li><a href="#">Loja</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <div class="form-container">
+      <h1>Adicionar Nova Tarefa</h1>
+
+      <form method="POST">
+        {% csrf_token %} 
+        
+        {{ form.as_p }}
+
+        <button type="submit" class="submit-button">Salvar Tarefa</button>
+      </form>
+
+      <a href="{% url 'home:lista_Tarefas' %}" class="cancel-link"
+        >Cancelar e voltar para a lista</a
+      >
+    </div>
+  </body>
+</html>

@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}FocusUP{% endblock %}</title>
+
+    {# --- 1. FONTES MODERNAS --- #}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700&display=swap"
+        rel="stylesheet"
+    />
+
+    {# --- 2. CSS CORRETOS --- #}
+    {# CSS Principal do Dashboard (renomeado de estilomain.css) #}
+    <link rel="stylesheet" href="{% static 'home/css/estilohome.css' %}" />
+    {# CSS Específico para Amigos #}
+    <link rel="stylesheet" href="{% static 'home/css/estiloamigos.css' %}" />
+
+    {% block extra_head %}{% endblock %} {# Bloco para CSS/JS extras #}
+</head>
+<body>
+    {# --- 3. CABEÇALHO LOGADO --- #}
+    {# (Com lógica 'ativo' e link 'Sair' ajustados) #}
+    <header class="cabecalho-principal"> {# Usando a classe do estilohome.css #}
+        <div class="container-cabecalho"> {# Usando a classe do estilohome.css #}
+            <a href="{% url 'home:home' %}" class="logo">FocusUP</a>
+            <nav class="navegacao-principal"> {# Usando a classe do estilohome.css #}
+                <ul>
+                    {# Marca o link ativo corretamente #}
+                    <li><a href="{% url 'home:home' %}" {% if request.resolver_match.url_name == 'home' %}class="ativo"{% endif %}>Painel</a></li>
+                    <li><a href="{% url 'home:lista_Tarefas' %}" {% if request.resolver_match.url_name == 'lista_Tarefas' %}class="ativo"{% endif %}>Tarefas</a></li>
+                    <li><a href="{% url 'home:meu_perfil' %}" {% if request.resolver_match.url_name == 'meu_perfil' %}class="ativo"{% endif %}>Meu perfil</a></li>
+                    <li><a href="{% url 'home:listar_amigos' %}" {% if request.resolver_match.url_name == 'listar_amigos' or request.resolver_match.url_name == 'buscar_usuarios' or request.resolver_match.url_name == 'listar_pedidos_amizade' %}class="ativo"{% endif %}>Amigos</a></li>
+                    
+                    <li><a href="#">Loja</a></li>
+                    {% if user.is_authenticated %}
+                       <li><a href="{% url 'home:logout' %}">Sair</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    {# --- 4. BLOCO DE CONTEÚDO --- #}
+    {# Sem o 'painel-container' aqui #}
+    {% block content %}
+    {# O conteúdo das páginas (amigos, tarefas, etc.) virá aqui #}
+    {% endblock %}
+
+
+    {% block extra_scripts %}{% endblock %} {# Bloco para JS no final #}
+     {# O script menu_mobile.js provavelmente não é necessário se este é o base das páginas logadas #}
+     {# <script src="{% static 'home/js/menu_mobile.js' %}"></script> #}
+</body>
+</html>

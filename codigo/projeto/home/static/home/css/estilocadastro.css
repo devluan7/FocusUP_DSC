@@ -1,0 +1,198 @@
+/* =================================== */
+/* --- Importação de Fontes Modernas --- */
+/* =================================== */
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700&display=swap");
+
+/* =================================== */
+/* --- Variáveis de Cor (MODO ESCURO) --- */
+/* --- (Copiadas do seu CSS 'home') --- */
+/* =================================== */
+:root {
+  --cor-fundo: #161a25;
+  --cor-secao: #1f2333;
+  --cor-texto-principal: #f8f9fa;
+  --cor-texto-secundario: #a9b1d6;
+  --cor-borda: #343b58;
+  --cor-primaria: #5a48f5;
+  --cor-destaque: #ffc93e;
+  --cor-texto-preto: #212529;
+  --cor-branco: #ffffff;
+  --gradiente-moderno: linear-gradient(135deg, var(--cor-primaria), #7b2cbf);
+  --sombra-padrao: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* =================================== */
+/* --- Configurações Globais --- */
+/* =================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Lato", sans-serif;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto-secundario);
+  line-height: 1.6;
+}
+
+/* =================================== */
+/* --- Estilos de Autenticação (Formulários) --- */
+/* =================================== */
+
+.form-container {
+  width: 100%;
+  max-width: 480px;
+  margin: 3rem auto;
+  padding: 2rem 2.5rem;
+  background-color: var(--cor-secao);
+  border-radius: 12px;
+  border: 1px solid var(--cor-borda);
+}
+
+.form-logo {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.form-logo img {
+  width: 100px;
+  height: auto;
+}
+
+.form-titulo {
+  font-family: "Poppins", sans-serif;
+  color: var(--cor-texto-principal);
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.form-grupo {
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  display: block;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  color: var(--cor-texto-secundario);
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.form-grupo input[type="text"],
+.form-grupo input[type="email"],
+.form-grupo input[type="password"],
+.form-grupo input[type="date"],
+.form-grupo input[type="username"],
+.form-grupo select {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-family: "Lato", sans-serif;
+  font-size: 1rem;
+  color: var(--cor-texto-principal);
+  background-color: var(--cor-fundo);
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-grupo input:focus,
+.form-grupo select:focus {
+  outline: none;
+  border-color: var(--cor-primaria);
+  box-shadow: 0 0 0 3px rgba(90, 72, 245, 0.25);
+}
+
+.form-grupo input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.8);
+  cursor: pointer;
+}
+
+.input-com-icone {
+  position: relative;
+}
+.input-com-icone .input-icone {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  color: var(--cor-texto-secundario);
+  cursor: pointer;
+  user-select: none;
+}
+.input-com-icone .input-icone:hover {
+  color: var(--cor-texto-principal);
+}
+.input-com-icone input[type="password"] {
+  padding-right: 2.5rem;
+}
+
+.form-error {
+  color: #ff6b6b;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 0.35rem;
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 0;
+}
+
+.form-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--cor-texto-secundario);
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.form-checkbox input[type="checkbox"] {
+  width: 1.15em;
+  height: 1.15em;
+  flex-shrink: 0;
+}
+
+.form-link {
+  color: var(--cor-primaria);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.form-link:hover {
+  color: var(--cor-branco);
+  text-decoration: underline;
+}
+
+.form-texto {
+  font-size: 0.95rem;
+  color: var(--cor-texto-secundario);
+  text-align: center;
+  margin-top: 2rem;
+}
+
+/* =================================== */
+/* --- Botões (Copiados do seu CSS 'home') --- */
+/* =================================== */
+
+.botao-destaque {
+  display: inline-block;
+  background-color: var(--cor-destaque);
+  color: var(--cor-texto-preto);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: none; /* Adicionado para resetar botões */
+  cursor: pointer; /* Adicionado para botões */
+}
+.botao-destaque:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(255, 201, 62, 0.4);
+}

@@ -1,0 +1,635 @@
+/* =================================== */
+/* --- Importação de Fontes Modernas --- */
+/* =================================== */
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700&display=swap");
+
+/* =================================== */
+/* --- Variáveis de Cor (MODO ESCURO) --- */
+/* =================================== */
+:root {
+  --cor-fundo: #161a25;
+  --cor-secao: #1f2333;
+  --cor-texto-principal: #f8f9fa;
+  --cor-texto-secundario: #a9b1d6;
+  --cor-borda: #343b58;
+  --cor-primaria: #5a48f5;
+  --cor-destaque: #ffc93e;
+  --cor-texto-preto: #212529;
+  --cor-branco: #ffffff;
+  --gradiente-moderno: linear-gradient(135deg, var(--cor-primaria), #7b2cbf);
+  --sombra-padrao: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* =================================== */
+/* --- Configurações Globais --- */
+/* =================================== */
+html {
+  font-size: 16px;
+  scroll-behavior: smooth; /* Rolagem suave para links âncora */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--cor-fundo);
+  font-family: "Lato", sans-serif;
+  color: var(--cor-texto-secundario);
+  line-height: 1.6;
+}
+
+/* ===================== */
+/* CABEÇALHO MODERNO */
+/* ===================== */
+.cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background-color: var(--cor-secao);
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.logo_focus {
+  width: 45px;
+  height: auto;
+  flex-shrink: 0;
+}
+
+/* --- Menu Mobile --- */
+.menu_hamburguer {
+  font-size: 1.75rem;
+  cursor: pointer;
+  color: var(--cor-texto-secundario);
+  transition: color 0.2s ease;
+  padding: 0.5rem;
+  z-index: 1001; /* Fica acima do menu */
+}
+.menu_hamburguer:hover {
+  color: var(--cor-branco);
+}
+
+.lista_nav {
+  display: block;
+  list-style: none;
+  padding: 1rem;
+  margin: 0;
+  background: var(--cor-secao);
+  position: fixed; /* 'absolute' pode bugar com scroll */
+  top: 0;
+  left: -100%;
+  width: 280px;
+  height: 100vh;
+  border-right: 1px solid var(--cor-borda);
+  box-shadow: var(--sombra-padrao);
+  z-index: 1000;
+  transition: left 0.3s ease;
+  padding-top: 5rem; /* Espaço para o 'X' */
+}
+
+.lista_nav.active {
+  left: 0;
+}
+
+.lista_nav li {
+  margin: 0;
+  text-align: left;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.lista_nav a {
+  text-decoration: none;
+  color: var(--cor-texto-secundario);
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  display: block;
+  padding: 1rem 1.25rem;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.lista_nav a:hover {
+  color: var(--cor-branco);
+  background-color: rgba(90, 72, 245, 0.1);
+}
+
+/* --- Botões Login/Cadastro --- */
+.botoes_cad_login {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* Agora estilizando os links <a> diretamente */
+.botao_login,
+.botao_cad {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.botao_login {
+  background-color: transparent;
+  border: 2px solid var(--cor-borda);
+  color: var(--cor-texto-secundario);
+}
+.botao_login:hover {
+  background-color: var(--cor-secao);
+  border-color: var(--cor-primaria);
+  color: var(--cor-primaria);
+}
+
+.botao_cad {
+  background-color: var(--cor-destaque);
+  color: var(--cor-texto-preto);
+  border: 2px solid var(--cor-destaque);
+}
+.botao_cad:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(255, 201, 62, 0.3);
+}
+
+/* A regra antiga para os <p> foi removida */
+
+/* ===================== */
+/* BANNER (HERO) */
+/* ===================== */
+.banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 1.5rem;
+  background: var(--gradiente-moderno);
+  text-align: center;
+}
+
+.texto_banner {
+  max-width: 600px;
+  margin-bottom: 2rem;
+}
+
+.txtTitulo {
+  font-family: "Poppins", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--cor-branco);
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.txtTexto {
+  font-family: "Lato", sans-serif;
+  font-size: 1.1rem;
+  color: var(--cor-branco);
+  opacity: 0.9;
+  line-height: 1.6;
+}
+
+.imgs_banner {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+.img_xp {
+  width: 10rem;
+  height: auto;
+}
+.img_estudando {
+  width: 12rem;
+  height: auto;
+}
+
+/* ===================== */
+/* SEÇÕES (SOBRE O JOGO / SOBRE NÓS) */
+/* ===================== */
+.sobre_jogo,
+.sobre_nos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4rem 1.5rem;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Título da Seção (SOBRE O JOGO / SOBRE NÓS) */
+.cards_titulo {
+  /* Removemos a caixa amarela */
+}
+.txt_titulo {
+  font-family: "Poppins", sans-serif;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--cor-texto-principal);
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  /* Remove -webkit-text-stroke */
+  -webkit-text-stroke-width: 0;
+}
+
+/* Cards */
+.div_cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 400px; /* Limita largura no mobile */
+}
+
+.card_ativo {
+  background-color: var(--cor-secao);
+  border: 1px solid var(--cor-borda);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card_ativo:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.img_container {
+  /* Removemos o fundo amarelo */
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  height: 200px; /* Altura fixa para a imagem */
+}
+.card_img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  filter: none; /* Remove filter: brightness */
+}
+
+.txt_container {
+  /* Removemos o fundo amarelo */
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+.card_heading {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--cor-primaria);
+  margin-bottom: 0.5rem;
+}
+.card_descricao {
+  font-family: "Lato", sans-serif;
+  font-size: 1rem;
+  color: var(--cor-texto-secundario);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Carrossel de bolinhas */
+.carousel_dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.carousel_dots .dot {
+  width: 12px;
+  height: 12px;
+  background-color: var(--cor-borda);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.carousel_dots .dot.active {
+  background-color: var(--cor-primaria);
+  transform: scale(1.1);
+}
+
+/* Card "Sobre Nós" (Mobile) */
+.div_card_nos {
+  width: 100%;
+  max-width: 400px;
+}
+.card_nos {
+  background-color: var(--cor-secao);
+  border: 1px solid var(--cor-borda);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: center;
+}
+.card_nos .img_container {
+  display: none; /* Esconde o container de imagem vazio */
+}
+
+/* ===================== */
+/* RODAPÉ */
+/* ===================== */
+.Rodape {
+  background-color: var(--cor-secao);
+  border-top: 1px solid var(--cor-borda);
+  padding: 3rem 1.5rem;
+  text-align: center;
+  margin-top: 2rem;
+  color: var(--cor-texto-secundario);
+}
+.Rodape .contate_nos {
+  /* Apenas para estilizar o que já existe */
+  font-size: 0.9rem;
+}
+.Rodape .contate_nos::before {
+  content: "FocusUP © 2025. Todos os direitos reservados.";
+}
+
+/* ===================== */
+/* RESPONSIVIDADE (DESKTOP) */
+/* ===================== */
+@media screen and (min-width: 1024px) {
+  /* --- Cabeçalho Desktop --- */
+  .menu_hamburguer {
+    display: none;
+  }
+
+  /* ======================== */
+  /* --- CORREÇÃO AQUI --- */
+  /* ======================== */
+  .cabecalho {
+    padding: 1rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .div_logo {
+    order: 1; /* Logo primeiro */
+  }
+
+  .nav_bar {
+    order: 2; /* Menu no meio */
+    width: auto;
+    height: auto;
+  }
+
+  .lista_nav {
+    display: flex !important; /* Força a exibição */
+    position: static;
+    flex-direction: row;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    width: auto;
+    height: auto;
+    padding: 0;
+    gap: 2rem;
+    z-index: 1;
+    align-items: center; /* <-- Alinhamento corrigido */
+  }
+  /* ======================== */
+  /* --- FIM DA CORREÇÃO --- */
+  /* ======================== */
+
+  .lista_nav li {
+    border-bottom: none;
+  }
+  .lista_nav a {
+    padding: 0.5rem 0;
+    font-size: 1rem;
+  }
+  .lista_nav a:hover {
+    background: transparent;
+    color: var(--cor-primaria);
+    transform: translateY(-2px);
+  }
+
+  .botoes_cad_login {
+    order: 3; /* Botões no final */
+  }
+  .botao_login,
+  .botao_cad {
+    font-size: 0.95rem;
+  }
+
+  /* --- Banner Desktop --- */
+  .banner {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+    padding: 6rem 4rem;
+    gap: 3rem;
+    max-width: 1300px;
+    margin: 2rem auto;
+    border-radius: 16px;
+  }
+  .texto_banner {
+    flex: 1;
+    max-width: 650px;
+    margin-bottom: 0;
+  }
+  .txtTitulo {
+    font-size: 3.5rem;
+  }
+  .txtTexto {
+    font-size: 1.2rem;
+  }
+  .imgs_banner {
+    flex: 0.8;
+    order: -1; /* Imagens vêm antes do texto */
+    flex-direction: column;
+  }
+
+  /* --- Seções Desktop --- */
+  .sobre_jogo,
+  .sobre_nos {
+    padding: 5rem 2.5rem;
+  }
+  .txt_titulo {
+    font-size: 2.75rem;
+    margin-bottom: 2rem;
+  }
+
+  /* --- Cards "Sobre o Jogo" Desktop --- */
+  .div_cards {
+    flex-direction: row;
+    max-width: 100%;
+    gap: 2rem;
+  }
+  .card_ativo,
+  .card_ativo.hidden {
+    display: flex !important; /* Mostra todos os cards */
+    flex: 1; /* Todos com a mesma largura */
+    text-align: center;
+  }
+  .carousel_dots {
+    display: none; /* Esconde bolinhas no desktop */
+  }
+
+  /* --- Card "Sobre Nós" Desktop --- */
+  .div_card_nos {
+    width: 100%;
+    max-width: 900px;
+  }
+  .card_nos {
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+    padding: 2.5rem;
+    text-align: left;
+  }
+  .card_nos .img_container {
+    display: block; /* Mostra o container da imagem */
+    flex: 1;
+    background-color: var(--cor-fundo); /* Fundo para a imagem */
+    height: 250px;
+    border-radius: 8px;
+    /* (Você pode adicionar uma imagem aqui) */
+  }
+  .card_nos .txt_container {
+    flex: 2;
+  }
+  .card_nos .card_heading {
+    font-size: 2rem;
+  }
+  .card_nos .card_descricao {
+    font-size: 1.1rem;
+  }
+}
+
+/* =================================== */
+/* --- Estilos de Autenticação (Formulários) --- */
+/* (Adicionado para Redefinição de Senha) */
+/* =================================== */
+
+.form-container {
+  width: 100%;
+  max-width: 480px;
+  margin: 3rem auto;
+  padding: 2rem 2.5rem;
+  background-color: var(--cor-secao);
+  border-radius: 12px;
+  border: 1px solid var(--cor-borda);
+}
+
+.form-titulo {
+  font-family: "Poppins", sans-serif;
+  color: var(--cor-texto-principal);
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.form-grupo {
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  display: block;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  color: var(--cor-texto-secundario);
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* Estiliza os campos renderizados pelo Django */
+.form-grupo input[type="text"],
+.form-grupo input[type="email"],
+.form-grupo input[type="password"],
+.form-grupo input[type="username"] {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-family: "Lato", sans-serif;
+  font-size: 1rem;
+  color: var(--cor-texto-principal);
+  background-color: var(--cor-fundo);
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-grupo input:focus {
+  outline: none;
+  border-color: var(--cor-primaria);
+  box-shadow: 0 0 0 3px rgba(90, 72, 245, 0.25);
+}
+
+/* Estilo para erros do Django */
+.form-error,
+.field-errors {
+  color: #ff6b6b;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 0.35rem;
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 0;
+}
+
+/* Ajuda e Links */
+.help-text {
+  font-size: 0.85rem;
+  color: var(--cor-texto-secundario);
+  margin-top: 0.5rem;
+  line-height: 1.5;
+}
+
+.form-link {
+  color: var(--cor-primaria);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.form-link:hover {
+  color: var(--cor-branco);
+  text-decoration: underline;
+}
+
+.form-texto,
+.form-container p {
+  font-size: 0.95rem;
+  color: var(--cor-texto-secundario);
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.form-container p:last-of-type {
+  margin-bottom: 0;
+}
+
+/* Botão (copiado do seu estilo) */
+.botao-destaque {
+  display: inline-block;
+  background-color: var(--cor-destaque);
+  color: var(--cor-texto-preto);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+.botao-destaque:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(255, 201, 62, 0.4);
+}
