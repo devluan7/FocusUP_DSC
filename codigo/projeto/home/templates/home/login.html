@@ -1,90 +1,90 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login - FocusUP</title>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - FocusUP</title>
+    <link rel="stylesheet" href="{% static 'home/css/estilologin.css' %}" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700&display=swap"
       rel="stylesheet"
     />
+  </head>
+  <body>
+    <main class="tela_login">
 
-    <link rel="stylesheet" href="{% static 'home/css/estilologin.css' %}" />
-  </head>
-  <body>
-    <div class="form-container">
-      <div class="form-logo">
-        <img src="{% static 'home/img/Logo.png' %}" alt="Logo FocusUP" />
-      </div>
+      {% if messages %}
+        <ul class="container-mensagens">
+            {% for message in messages %}
+                <li class="mensagem {{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+      {% endif %}
+            <div class="container_login">
+        <div class="logo_login">
+          <img src="{% static 'home/img/Logo.png' %}" alt="Logo FocusUP" />
+        </div>
 
-      <h1 class="form-titulo">Bem-vindo de volta!</h1>
-      <p class="form-texto" style="margin-top: -0.5rem; margin-bottom: 2rem">
-        Entre com sua conta para continuar
-      </p>
+        <h1 class="titulo_login">Bem-vindo de volta!</h1>
+        <p class="subtitulo_login">Entre com sua conta para continuar</p>
 
-      <form action="" method="POST">
-        {% csrf_token %}
+                <form class="form_login" action="{% url 'home:login' %}" method="POST">
+          {% csrf_token %}
 
-        <div class="form-grupo">
-          <label for="id_username" class="form-label">
-            Email ou Nome de Usuário
-          </label>
-          <input
-            type="text"
-            id="id_username"
-            name="username"
-            placeholder="Digite seu email ou nome de usuário"
-            required
-          />
-        </div>
+          <div class="campo_formulario">
+            <label for="email" class="label_formulario">Email ou Usuário</label>
+            <input
+              type="text" {# Mudado para 'text' para aceitar email ou usuário #}
+              id="email"
+              name="email" {# A view vai ler 'email' #}
+              placeholder="Digite seu email ou usuário"
+              autocomplete="username" {# Ajuda o navegador #}
+              required
+            />
+            {% if erro_email %} {# Isso provavelmente não é usado pela view, mas mantido #}
+            <div class="erro_campo">{{ erro_email }}</div>
+            {% endif %}
+          </div>
 
-        <div class="form-grupo">
-          <label for="id_password" class="form-label">Senha</label>
-          <div class="input-com-icone">
-            <input
-              type="password"
-              id="id_password"
-              name="password"
-              placeholder="Digite sua senha"
-              required
-            />
-            <span class="input-icone" onclick="toggleSenha('id_password')">
-              &#128065;
-            </span>
-          </div>
-        </div>
+          <div class="campo_formulario">
+            <label for="senha" class="label_formulario">Senha</label>
+            <div class="input_olho">
+              <input
+                type="password"
+                id="senha"
+                name="senha" {# A view vai ler 'senha' #}
+                placeholder="Digite sua senha"
+                autocomplete="current-password" {# Ajuda o navegador #}
+                required
+              />
+              <span class="olho" onclick="toggleSenha('senha')">&#128065;</span>
+            </div>
+            {% if erro_senha %}
+            <div class="erro_campo">{{ erro_senha }}</div>
+            {% endif %}
+          </div>
 
-        {% if form.non_field_errors %}
-        <div class="form-error">{{ form.non_field_errors }}</div>
-        {% endif %} {% if erro %}
-        <div class="form-error">{{ erro }}</div>
-        {% endif %}
+          {% if erro %}
+          <div class="erro_campo">{{ erro }}</div>
+          {% endif %}
 
-        <button
-          type="submit"
-          class="botao-destaque"
-          style="width: 100%; margin-top: 1rem"
-        >
-          Entrar
-        </button>
-      </form>
+          <button type="submit" class="botao_login">Entrar</button>
+        </form>
 
-      <p class="form-texto" style="margin-top: 1.5rem; margin-bottom: 0.5rem">
-        <a href="{% url 'password_reset' %}" class="form-link">
-          Esqueceu sua senha?
-        </a>
-      </p>
+        <div class="links_auxiliares">
+          <p style="margin-top: 20px">
+            <a href="{% url 'home:password_reset' %}">Esqueceu sua senha?</a>
+          </p>
+          <p style="margin-top: 10px;">
+            Não tem uma conta? <a href="{% url 'home:cadastro' %}">Cadastre-se</a>
+          </p>
+        </div>
+      </div>
+    </main>
 
-      <p class="form-texto" style="margin-top: 0.5rem">
-        Não tem uma conta?
-        <a href="{% url 'home:cadastro' %}" class="form-link">Cadastre-se</a>
-      </p>
-    </div>
-
-    <script src="{% static 'home/js/menucadastro.js' %}"></script>
-  </body>
+    <script src="{% static 'home/js/menucadastro.js' %}"></script>
+  </body>
 </html>

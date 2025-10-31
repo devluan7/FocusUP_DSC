@@ -1,34 +1,27 @@
-{% extends 'home/base.html' %}
-{% load static %}
+{% extends 'home/base.html' %} {% block content %}
+<div class="container">
+  <h1>Pedidos de Amizade Pendentes</h1>
 
-{% block content %}
-<div class="container-amigos"> {# Container principal #}
-    <section class="secao"> {# Envolve o conteúdo em uma seção #}
-        <h1>Pedidos de Amizade Pendentes</h1>
-
-        {% if messages %}
-            {% for message in messages %}
-                {# Mensagem estilizada #}
-                <div class="alert alert-success">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-
-        {% if pedidos %}
-            <ul class="lista-simples"> {# Lista estilizada #}
-                {% for pedido in pedidos %}
-                    <li>
-                        <span>{{ pedido.de_usuario.nome_usuario }} quer ser seu amigo.</span>
-                        <div class="botoes-pedido"> {# Container para os botões #}
-                            {# Botões estilizados #}
-                            <a href="{% url 'home:aceitar_pedido_amizade' pedido.id %}" class="botao-link botao-sucesso">Aceitar</a>
-                            <a href="{% url 'home:recusar_remover_amizade' pedido.id %}" class="botao-link botao-perigo">Recusar</a>
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p class="sem-resultados">Você não tem pedidos de amizade pendentes.</p> {# Parágrafo estilizado #}
-        {% endif %}
-    </section>
+  {% if messages %} {% for message in messages %}
+  <div class="alert alert-success">{{ message }}</div>
+  {% endfor %} {% endif %} {% if pedidos %}
+  <ul>
+    {% for pedido in pedidos %}
+    <li>
+      {{ pedido.de_usuario.nome_usuario }} quer ser seu amigo.
+      <a href="{% url 'home:aceitar_pedido_amizade' pedido.id %}" class="btn"
+        >Aceitar</a
+      >
+      <a
+        href="{% url 'home:recusar_remover_amizade' pedido.id %}"
+        class="btn btn-danger"
+        >Recusar</a
+      >
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>Você não tem pedidos de amizade pendentes.</p>
+  {% endif %}
 </div>
 {% endblock %}

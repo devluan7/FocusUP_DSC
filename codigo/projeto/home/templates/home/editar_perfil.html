@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FocusUP - Painel</title>
+    <title>Editar Perfil - FocusUP</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,10 +12,12 @@
       href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700&display=swap"
       rel="stylesheet"
     />
-
+    
     <link rel="stylesheet" href="{% static 'home/css/estilohome.css' %}" />
+    <link rel="stylesheet" href="{% static 'home/css/editar_perfil.css' %}?v=3" />
   </head>
   <body>
+    
     
     <header class="cabecalho-principal">
       <div class="container-cabecalho">
@@ -43,9 +45,7 @@
         </div>
 
         <button class="botao-menu-mobile" id="botao-menu-mobile" aria-label="Abrir menu" aria-expanded="false">
-          <span></span>
-          <span></span>
-          <span></span>
+          <span></span><span></span><span></span>
         </button>
         
       </div>
@@ -60,7 +60,6 @@
       </ul>
     </div>
 
-
     <div class="menu-mobile-overlay" id="menu-mobile-overlay">
       <nav class="navegacao-mobile">
         <ul>
@@ -71,7 +70,7 @@
       </nav>
       
       <button class="profile-avatar-mobile perfil-foto-container" id="profile-dropdown-trigger-mobile" aria-label="Abrir menu do perfil" aria-expanded="false" tabindex="0">
-        <img src="https://static.wikia.nocookie.net/naruto/images/d/d7/Naruto_Uzumaki_%28Parte_I_-_Genin%29.png" alt="Avatar do Usuário" class="perfil-foto">
+        <img src="https://static.wikia.nocookie.net/naruto/images/d/d7/Naruto_Uzumaki_%2C(Parte_I_-_Genin%29.png" alt="Avatar do Usuário" class="perfil-foto">
         <span>{{ user.nome_usuario|default:user.email }}</span>
         
         <span class="level-badge level-badge-display">
@@ -89,86 +88,64 @@
       </div>
     </div>
     
-    <div class="painel-container">
-      <main class="painel-principal">
-        <section id="inicioID" class="secao destaque-gradiente">
-          <h1 class="titulo_main">Bem-vindo, {{ user.nome_usuario|default:user.email }}!</h1>
-          <p id="frase_motivation" class="frase_motivation">
-            Continue sua jornada e conquiste seus objetivos.
-          </p>
-        </section>
-
-        <section id="tarefasID" class="secao">
-          <h2>Suas Tarefas</h2>
-          <p>Aqui vão aparecer as tarefas pendentes.</p>
-          <a href="{% url 'home:lista_Tarefas' %}" class="botao-destaque">
-            Ver todas as tarefas
-          </a>
-        </section>
-
-        <section id="evolucaoID" class="secao">
-          <h2>Sua Evolução</h2>
-          
-          <div class="barra-progresso">
-            <small id="progresso-level-texto">Progresso Nível {{ user.nivel }}</small>
+    <main class="main_editar_perfil"> 
+        <div class="container_form_editar"> 
+            {% if messages %}
+                <div class="mensagens_django">
+                    {% for message in messages %}
+                        <div class="alerta alerta_{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
             
-            <div class="xp-valores">
-              <span id="progresso-xp-atual">{{ xp_usuario|default:0 }} XP</span>
-              <span id="progresso-xp-necessario">{{ xp_necessario|default:100 }} XP</span>
-            </div>
+            <h1 class="titulo_editar_perfil">Editar Perfil</h1> 
+            <p class="subtitulo_editar_perfil">Atualize suas informações pessoais.</p>
 
-            <div class="barra-fundo">
-              {% widthratio xp_usuario xp_necessario 100 as progresso_percentual %}
-              <div class="barra-preenchimento" id="progresso-barra-preenchimento" style="width: {{ progresso_percentual }}%;">
-                {{ progresso_percentual }}%
-              </div>
-            </div>
-          </div>
+            <form class="form_editar_perfil" method="POST" novalidate> 
+                {% csrf_token %}
 
-        </section>
-      </main>
+                <div class="campo_formulario">
+                    <label for="{{ form.nome.id_for_label }}" class="label_formulario">Nome completo</label>
+                    {{ form.nome }} 
+                    {% if form.nome.errors %}<div class="erro_campo">{{ form.nome.errors }}</div>{% endif %}
+                </div>
 
-      <aside class="painel-lateral">
-        <div id="perfilID" class="secao bloco-usuario">
-          
-          <div class="usuario-stats">
-            <div class="stat-item">
-              <span class="stat-numero" id="xp-total-display">{{ user.xp_atual|default:0 }}</span>
-              <small class="stat-label">XP ATUAL</small>
-            </div>
+                <div class="campo_formulario">
+                    <label for="{{ form.nome_usuario.id_for_label }}" class="label_formulario">Nome de usuário</label>
+                    {{ form.nome_usuario }} 
+                    {% if form.nome_usuario.errors %}<div class="erro_campo">{{ form.nome_usuario.errors }}</div>{% endif %}
+                </div>
 
-            <div class="stat-item"> 
-              <span class="stat-numero" id="dias-foco-display">{{ user.dias_foco }}</span> 
-              <small class="stat-label">DIAS DE FOCO</small>
+                <div class="campo_formulario">
+                    <label for="{{ form.email.id_for_label }}" class="label_formulario">E-mail</label>
+                    {{ form.email }} 
+                    {% if form.email.errors %}<div class="erro_campo">{{ form.email.errors }}</div>{% endif %}
+                </div>
+
+                <div class="campo_formulario">
+                    <label for="{{ form.sexo.id_for_label }}" class="label_formulario">Sexo</label>
+                    {{ form.sexo }} 
+                    {% if form.sexo.errors %}<div class="erro_campo">{{ form.sexo.errors }}</div>{% endif %}
+                </div>
+
+                <div class="campo_formulario">
+                    <label for="{{ form.data_nascimento.id_for_label }}" class="label_formulario">Data de nascimento</label>
+                    {{ form.data_nascimento }} 
+                    {% if form.data_nascimento.errors %}<div class="erro_campo">{{ form.data_nascimento.errors }}</div>{% endif %}
+                </div>
+
+                <button type="submit" class="botao_salvar_perfil">Salvar Alterações</button> 
+            </form>
+
+            <div class="links_auxiliares_editar_perfil">
+                <p class="texto_voltar">
+                    <a href="{% url 'home:home' %}" class="link_voltar">Voltar para Home</a>
+                </p>
             </div>
-          </div>
         </div>
-
-        <div class="stat-item-foco-botao-wrapper">
-          {% if pode_resgatar %}
-            <button class="botao-resgatar-foco" id="btn-resgatar-foco">
-              Resgatar Foco (20xp)
-            </button>
-          {% else %}
-            <button class="botao-resgatar-foco" id="btn-resgatar-foco" disabled>
-              Foco resgatado!
-            </button>
-          {% endif %}
-        </div>
-
-        <section id="lojaID" class="secao">
-          <h2>Loja</h2>
-          <p>Itens virtuais para seu avatar.</p>
-          <a href="#" class="botao-secundario">Ir para a Loja</a>
-        </section>
-
-        <section id="configID" class="secao">
-          <h2>Configurações</h2>
-          <p>Preferências da sua conta.</p>
-          <a href="{% url 'home:editar_perfil' %}" class="botao-secundario">Ajustar Conta</a>
-        </section>
-      </aside>
-    </div>
+    </main>
     
     <script type="application/json" id="js-data">
       {
@@ -176,8 +153,8 @@
         "csrfToken": "{{ csrf_token }}"
       }
     </script>
-    
     <script src="{% static 'home/js/homejs.js' %}"></script>
     
+    <script src="{% static 'home/js/editar_perfil.js' %}?v=3"></script> 
   </body>
 </html>

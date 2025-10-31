@@ -1,43 +1,21 @@
-{% extends 'home/base.html' %}
-{% load static %}
+{% extends 'home/base.html' %} {% block content %}
+<div class="container">
+  <h1>Meus Amigos</h1>
 
-{% block content %}
-<div class="container-amigos">
-    <section class="secao">
-        <h1>Meus Amigos</h1>
+  <a
+    href="{% url 'home:buscar_usuarios' %}"
+    style="display: inline-block; margin-bottom: 20px"
+    >Encontrar Novos Amigos</a
+  >
 
-        <a href="{% url 'home:buscar_usuarios' %}" class="botao-link botao-secundario">
-            Encontrar Novos Amigos
-        </a>
-
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert {{ message.tags }}">{{ message }}</div> {# Mostra mensagens de sucesso/erro #}
-            {% endfor %}
-        {% endif %}
-
-        {% if amigos %}
-            <ul class="lista-simples">
-                {% for amigo in amigos %}
-                <li>
-                    <span>{{ amigo.nome_usuario }}</span> {# Nome do amigo #}
-
-                    {# --- ADICIONE ESTE FORMULÁRIO --- #}
-                    <form action="{% url 'home:remover_amigo' amigo.nome_usuario %}" method="POST" style="display: inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="botao-link botao-perigo" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; margin-bottom: 0;" onclick="return confirm('Tem certeza que deseja remover {{ amigo.nome_usuario }} da sua lista de amigos?');">
-                            Remover Amigo
-                        </button>
-                    </form>
-                    {# --- FIM DO FORMULÁRIO --- #}
-                </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p class="sem-resultados">
-                Você ainda não tem amigos. Procure por usuários e envie um pedido!
-            </p>
-        {% endif %}
-    </section>
+  {% if amigos %}
+  <ul>
+    {% for amigo in amigos %}
+    <li>{{ amigo.nome_usuario }}</li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>Você ainda não tem amigos. Procure por usuários e envie um pedido!</p>
+  {% endif %}
 </div>
 {% endblock %}

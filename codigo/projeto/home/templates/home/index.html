@@ -1,150 +1,110 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700&display=swap"
-      rel="stylesheet"
-    />
-
-    <link rel="stylesheet" href="{% static 'home/css/estilo.css' %}" />
-
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'home/css/estilo.css' %}">
+    <style>
+        
+    </style>
     <title>FocusUP</title>
-  </head>
-  <body>
+</head>
+<body>
     <header class="cabecalho">
-      <div class="nav_bar">
-        <div class="menu_hamburguer" id="menuBtn">☰</div>
-        <ul class="lista_nav" id="menuMobile">
-          <li><a href="#inicioID">Inicio</a></li>
-          <li><a href="#sobre_jogoID">Sobre o FocusUP</a></li>
-          <li><a href="#sobre_nosID">Sobre Nós</a></li>
-        </ul>
-      </div>
-       
-      <div class="div_logo">
-        <img
-          src="{% static 'home/img/Logo.png' %}"
-          alt="Logo"
-          class="logo_focus"
-        />
-      </div>
 
-      <div class="botoes_cad_login">
-        <a href="{% url 'home:login' %}" class="botao_login">Login</a>
-        <a href="{% url 'home:cadastro' %}" class="botao_cad">Cadastre-se</a>
-      </div>
+            <div class="nav_bar">
+                <div class="menu_hamburguer" id="menuBtn">☰</div>
+                    <ul class="lista_nav" id="menuMobile">
+                        <li><a href="#inicioID">Inicio</a></li>
+                        <li><a href="#sobre_jogoID">Sobre o FocusUP</a></li>
+                        <li><a href="#sobre_nosID">Sobre Nós</a></li>
+                    </ul>
+            </div>  
+            <div class="div_logo"> <img src="{% static 'home/img/Logo.png' %}" alt="Logo" class="logo_focus"> </div>
+
+            <div class="botoes_cad_login">
+                <div class="botao_login" onclick="window.location.href='/login'" ><p class="txt_login">Login</p></div>
+                <div class="botao_cad" onclick="window.location.href='/cadastro'"><p class="txt_cad">Cadastre-se</p></div>
+            </div>   
+
     </header>
     <section class="banner" id="inicioID">
-      <div class="imgs_banner">
-        <img
-          src="{% static 'home/img/BarraXP.png' %}"
-          class="img_xp"
-          alt="Barra de XP"
-        />
-        <img
-          src="{% static 'home/img/SentadoEstudando.png' %}"
-          class="img_estudando"
-          alt="Garoto Estudando"
-        />
-      </div>
-
-      <div class="texto_banner">
-        <p class="txtTitulo">Seu Dia em Modo Campanha</p>
-        <p class="txtTexto">
-          Organize suas tarefas, desbloqueie conquistas e suba de nível na vida
-          real. Com o FocusUp, a rotina vira uma aventura motivadora.
-        </p>
-      </div>
-    </section>
-    <section class="sobre_jogo" id="sobre_jogoID">
-      <div class="cards_titulo"><p class="txt_titulo">SOBRE O JOGO</p></div>
-
-      <div class="div_cards">
-        <div class="card_ativo" id="card1">
-          <div class="img_container">
-            <img
-              src="{% static 'home/img/MagaLendo.png' %}"
-              class="card_img"
-              alt="maga_lendo"
-            />
-          </div>
-          <div class="txt_container">
-            <h3 class="card_heading">Transforme Tarefas em missões</h3>
-            <p class="card_descricao">
-              Conclua tarefas do dia a dia como se fossem desafios de um RPG. A
-              cada missão cumprida, você ganha XP, avança de nível e sente o
-              progresso real da sua jornada diária.
-            </p>
-          </div>
+        <div class="imgs_banner">
+            <img src="{% static 'home/img/BarraXP.png' %}" class = "img_xp" alt="Barra de XP">
+            <img src="{% static 'home/img/SentadoEstudando.png' %}" class ="img_estudando" alt="Garoto Estudando">
         </div>
 
+        <div class="texto_banner">
+            <p class="txtTitulo">Seu Dia em Modo Campanha</p>
+            <p class="txtTexto">Organize suas tarefas, desbloqueie conquistas e suba de nível na vida real. Com o FocusUp, a rotina vira uma aventura motivadora.</p>
+        </div>
+        
+    </section>
+    <section class="sobre_jogo" id="sobre_jogoID">
+        <div class="cards_titulo"><p class="txt_titulo">SOBRE O JOGO</p></div>
+
+    <div class="div_cards">
+        <div class="card_ativo" id="card1">
+            <div class="img_container">
+                <img src="{% static 'home/img/MagaLendo.png' %}"class = "card_img" alt="maga_lendo">
+            </div>
+            <div class="txt_container">
+                <h3 class="card_heading">Transforme Tarefas em missões</h3>
+                <p class="card_descricao">Conclua tarefas do dia a dia como se fossem desafios de um RPG. A cada missão cumprida, você ganha XP, avança de nível e sente o progresso real da sua jornada diária.</p>
+            </div>
+        </div>
+        
         <div class="card_ativo hidden" id="card2">
-          <div class="img_container">
-            <img
-              src="{% static 'home/img/GuerreiroLapis.png' %}"
-              class="card_img"
-              alt="maga_lendo"
-            />
-          </div>
-          <div class="txt_container">
-            <h3 class="card_heading">Personalize seu personagem</h3>
-            <p class="card_descricao">
-              Crie um herói único com mais de mil combinações visuais e mais de
-              100 equipamentos exclusivos. Escolha sua classe, seu estilo e
-              vista-se para conquistar o mundo — um objetivo por vez.
-            </p>
-          </div>
+            <div class="img_container">
+                <img src="{% static 'home/img/GuerreiroLapis.png' %}"class = "card_img" alt="maga_lendo">
+            </div>
+            <div class="txt_container">
+                <h3 class="card_heading">Personalize seu personagem</h3>
+                <p class="card_descricao">Crie um herói único com mais de mil combinações visuais e mais de 100 equipamentos exclusivos. Escolha sua classe, seu estilo e vista-se para conquistar o mundo — um objetivo por vez.</p>
+            </div>
         </div>
 
         <div class="card_ativo hidden" id="card3">
-          <div class="img_container">
-            <img
-              src="{% static 'home/img/GuerreiraLutando.png' %}"
-              class="card_img"
-              alt="maga_lendo"
-            />
-          </div>
-          <div class="txt_container">
-            <h3 class="card_heading">Entre em Batalhas Épicas</h3>
-            <p class="card_descricao">
-              Enfrente monstros poderosos para ganhar itens raros e teste sua
-              força em duelos contra outros jogadores. Mostre quem é o
-              verdadeiro herói!    
-            </p>
-          </div>
+            <div class="img_container">
+                <img src="{% static 'home/img/GuerreiraLutando.png' %}"class = "card_img" alt="maga_lendo">
+            </div>
+            <div class="txt_container">
+                <h3 class="card_heading">Entre em Batalhas Épicas</h3>
+                <p class="card_descricao">Enfrente monstros poderosos para ganhar itens raros e teste sua força em duelos contra outros jogadores. Mostre quem é o verdadeiro herói!    </p>
+            </div>
         </div>
-      </div>
 
-      <div class="carousel_dots"></div>
+    </div>
+    
+    <div class="carousel_dots">
+    </div>
+
     </section>
     <section class="sobre_nos" id="sobre_nosID">
-      <div class="cards_titulo"><p class="txt_titulo">SOBRE NÓS</p></div>
+        <div class="cards_titulo"><p class="txt_titulo">SOBRE NÓS</p></div>
 
-      <div class="div_card_nos">
+        <div class="div_card_nos">
         <div class="card_nos">
-          <div class="img_container"></div>
-          <div class="txt_container">
-            <h3 class="card_heading">FocusUP Group</h3>
-            <p class="card_descricao">
-              Somos um grupo de estudantes da Universidade Cidade de São Paulo
-              (UNICID), e criamos um progeto para nosso TCC, algo para ajudar na
-              vida das pessoas, esperamos que voce aprecie a nossa criação.
-            </p>
-          </div>
-        </div>
-      </div>
+            <div class="img_container">
+                
+            </div>
+            <div class="txt_container">
+                <h3 class="card_heading">FocusUP Group</h3>
+                <p class="card_descricao">Somos um grupo de estudantes da Universidade Cidade de São Paulo (UNICID), e criamos um progeto para nosso TCC, algo para ajudar na vida das pessoas, esperamos que voce aprecie a nossa criação.</p>
+            </div>
+
+
+
     </section>
-    <footer class="Rodape">
-      <div class="contate_nos"></div>
+    <footer class ="Rodape">
+        <div class="contate_nos"></div>
     </footer>
+
+
 
     <script src="{% static 'home/js/banner_troca.js' %}"></script>
     <script src="{% static 'home/js/menu_mobile.js' %}"></script>
-  </body>
+
+</body>
 </html>
