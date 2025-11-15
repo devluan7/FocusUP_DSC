@@ -1,148 +1,131 @@
+{% extends 'home/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Minhas Tarefas - FocusUP</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
 
-    <link rel="stylesheet" href="{% static 'home/css/estilohome.css' %}" />
-    
-    <link rel="stylesheet" href="{% static 'home/css/estilotarefas.css' %}" />
-</head>
-<body>
+{% block title %}Minhas Tarefas - FocusUP{% endblock %}
 
-    <header class="cabecalho-principal">
-      <div class="container-cabecalho">
-        <a href="{% url 'home:home' %}" class="logo">
-          <img src="{% static 'home/img/LogoOFC.png' %}" alt="FocusUP Logo">
-        </a>
-        <div class="menu-desktop-container">
-          <nav class="navegacao-principal">
-            <ul>
-              <li><a href="{% url 'home:home' %}" {% if request.resolver_match.url_name == 'home' %}class="ativo"{% endif %}>Painel</a></li>
-              <li><a href="{% url 'home:lista_Tarefas' %}" {% if request.resolver_match.url_name == 'lista_Tarefas' %}class="ativo"{% endif %}>Tarefas</a></li>
-              <li><a href="#">Loja</a></li> 
-            </ul>
-          </nav>
-          <button class="profile-avatar perfil-foto-container" id="profile-dropdown-trigger" aria-label="Abrir menu do perfil" aria-expanded="false" tabindex="0">
-            <img src="https://static.wikia.nocookie.net/naruto/images/d/d7/Naruto_Uzumaki_%28Parte_I_-_Genin%29.png" alt="Avatar do Usuário" class="perfil-foto">
-            <span class="level-badge level-badge-display">
-              {{ user.nivel|default:1 }}
-            </span>
-          </button>
-        </div>
-        <button class="botao-menu-mobile" id="botao-menu-mobile" aria-label="Abrir menu" aria-expanded="false">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-    </header>
-    <div class="profile-dropdown" id="profile-dropdown">
-      <ul>
-        <li><a href="{% url 'home:editar_perfil' %}" {% if request.resolver_match.url_name == 'editar_perfil' %}class="ativo"{% endif %}>Meu Perfil</a></li> 
-        <li><a href="{% url 'home:meu_perfil_focos' %}" {% if request.resolver_match.url_name == 'meu_perfil_focos' %}class="ativo"{% endif %}>Perfil Focos</a></li>
-        <li class="dropdown-divisor"><hr></li>
-        <li><a href="{% url 'home:logout' %}" class="dropdown-sair">Sair</a></li>
-      </ul>
-    </div>
-    <div class="menu-mobile-overlay" id="menu-mobile-overlay">
-      <nav class="navegacao-mobile">
-        <ul>
-          <li><a href="{% url 'home:home' %}" {% if request.resolver_match.url_name == 'home' %}class="ativo"{% endif %}>Painel</a></li>
-          <li><a href="{% url 'home:lista_Tarefas' %}" {% if request.resolver_match.url_name == 'lista_Tarefas' %}class="ativo"{% endif %}>Tarefas</a></li>
-          <li><a href="#">Loja</a></li> 
-        </ul>
-      </nav>
-      <button class="profile-avatar-mobile perfil-foto-container" id="profile-dropdown-trigger-mobile" aria-label="Abrir menu do perfil" aria-expanded="false" tabindex="0">
-        <img src="https://static.wikia.nocookie.net/naruto/images/d/d7/Naruto_Uzumaki_%2C(Parte_I_-_Genin%29.png" alt="Avatar do Usuário" class="perfil-foto">
-        <span>{{ user.nome_usuario|default:user.email }}</span>
-        <span class="level-badge level-badge-display">
-          {{ user.nivel|default:1 }}
-        </span>
-      </button>
-      <div class="profile-dropdown-mobile" id="profile-dropdown-mobile">
-        <ul>
-          <li><a href="{% url 'home:editar_perfil' %}" {% if request.resolver_match.url_name == 'editar_perfil' %}class="ativo"{% endif %}>Meu Perfil</a></li> 
-          <li><a href="{% url 'home:meu_perfil_focos' %}" {% if request.resolver_match.url_name == 'meu_perfil_focos' %}class="ativo"{% endif %}>Perfil Focos</a></li>
-          <li class="dropdown-divisor"><hr></li>
-          <li><a href="{% url 'home:logout' %}" class="dropdown-sair">Sair</a></li>
-        </ul>
-      </div>
-    </div>
-    
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'home/css/estilotarefas.css' %}?v=2" />
+{% endblock extra_head %}
+
+
+{% block content %}
     <div class="container-tarefas" 
          data-ajax-url-gerar="{% url 'home:adicionar_Tarefas' %}" 
          data-ajax-url-salvar="{% url 'home:adicionar_Tarefas' %}" 
-         data-csrf-token="{{ csrf_token }}">
+         data-csrf-token="{{ csrf_token }}"
+         
+         data-slots-usados="{{ slots_usados }}"
+         data-slots-limite="{{ slots_limite }}">
         
         <h1>Minhas Tarefas</h1>
 
-        <a href="{% url 'home:adicionar_Tarefas' %}" class="link-adicionar link-botao" style="margin-bottom: 1rem;">
-            Adicionar Nova Tarefa Manualmente
-        </a>
-
-        <section class="secao-sugestao-ia"> {# Classe CSS para estilizar o card #}
-          <h2>Sugestão Diária da IA</h2>
-          <div class="container-gerar-ia-lista"> {# Classe CSS para o container do select+botão #}
-            <select id="seletor-foco-ia-lista" aria-label="Selecione o perfil de foco para a IA">
-              <option value="">Selecione um Foco...</option>
-                {% for perfil in perfis_usuario %}
-                  <option value="{{ perfil.foco_nome }}">{{ perfil.foco_nome|capfirst }}</option>
-                {% empty %}
-                  <option value="" disabled>Cadastre Perfis de Foco!</option>
-                {% endfor %}
-            </select>
-            <button id="botao-gerar-ia-lista" class="botao-gerar-ia-lista" disabled>Sugerir Tarefa</button>
-          </div>
-          <div id="area-sugestao-lista" style="display: none;"> {# Área da sugestão, começa escondida #}
-                </div>
-          <div id="feedback-ia-lista"></div> {# Para mensagens de erro/sucesso/loading #}
-          <div class="botoes-sugestao"> {# Container dos botões Aceitar/Dispensar #}
-                <button id="botao-aceitar-lista" class="botao-aceitar-lista">Adicionar esta Tarefa</button>
-                <button id="botao-dispensar-lista" class="botao-dispensar-lista">Dispensar</button>
-          </div>
-        </section>
-        <ul class="lista-tarefas" id="lista-tarefas-ul"> {# ID para o JS adicionar itens #}
-          {% for tarefa in tarefas %}
-          <li class="item-tarefa {% if tarefa.concluida %}concluida{% endif %}" id="tarefa-{{ tarefa.id_Tarefa }}"> {# ID para JS remover/atualizar #}
-            <div class="tarefa-info">
-              <span class="tarefa-titulo"> {{ tarefa.titulo }} </span>
-              <div class="tarefa-detalhes">
-                
-                <div class="info-bloco xp-bloco">
-                  <span class="info-label">XP</span>
-                  <span class="info-valor">{{ tarefa.xp|default:0 }}</span>
-                </div>
-                {% if tarefa.descricao %}
-                    <p class="task-description-full" data-fulltext="{{ tarefa.descricao|escape }}">
-                        {{ tarefa.descricao }} {# O JS vai truncar e adicionar o botão se necessário #}
-                    </p>
-                  {% endif %}
-              </div>
+        <div class="contador-slots-container" id="contador-slots-container">
+            <h3 class="contador-titulo">Slots de Tarefas Pessoais (Hoje)</h3>
+            <div class="contador-visual" id="contador-slots-visual">
+                {{ slots_usados }} / {{ slots_limite }}
             </div>
-            <form method="POST" action="{% url 'home:concluir_tarefa' tarefa.id_Tarefa %}" class="formulario-concluir">
-              {% csrf_token %}
-              <button type="submit" class="botao-tarefa {% if tarefa.concluida %}botao-desmarcar{% else %}botao-concluir{% endif %}">
-                {% if tarefa.concluida %}Desmarcar{% else %}Concluir{% endif %}
-              </button>
-            </form>
-          </li>
-          {% empty %}
-          <li class="item-tarefa-vazia" id="lista-tarefas-vazia"> {# ID para o JS remover #}
-            <p>Você ainda não tem tarefas cadastradas.</p>
-            <p>Adicione manualmente ou use a sugestão da IA!</p>
-          </li>
-          {% endfor %}
+        </div>
+        
+        <a href="{% url 'home:adicionar_Tarefas' %}" class="link-adicionar link-botao" style="margin-bottom: 1rem;">
+            Gerenciar Tarefas Pessoais (Recorrentes)
+        </a>
+        {% if slots_usados < slots_limite %}
+        
+        <div id="area-adicionar-tarefas"> 
+            <section class="secao-sugestao-ia">
+                <h2>Sugestão Rápida da IA (Usa 1 Slot)</h2>
+                <div class="container-gerar-ia-lista">
+                    <select id="seletor-foco-ia-lista" aria-label="Selecione o perfil de foco para a IA">
+                        <option value="">Selecione um Foco...</option>
+                        {% for perfil in perfis_usuario %}
+                            <option value="{{ perfil.foco_nome }}">{{ perfil.foco_nome|capfirst }}</option>
+                        {% empty %}
+                            <option value="" disabled>Cadastre Perfis de Foco!</option>
+                        {% endfor %}
+                    </select>
+                    <button id="botao-gerar-ia-lista" class="botao-gerar-ia-lista" disabled>Sugerir Tarefa</button>
+                </div>
+                <div id="area-sugestao-lista" style="display: none;">
+                </div>
+                <div id="feedback-ia-lista"></div>
+                <div class="botoes-sugestao">
+                    <button id="botao-aceitar-lista" class="botao-aceitar-lista">Adicionar esta Tarefa</button>
+                    <button id="botao-dispensar-lista" class="botao-dispensar-lista">Dispensar</button>
+                </div>
+            </section>
+        </div>
+
+        {% else %}
+        
+        <div class="limite-slots-mensagem" id="limite-slots-mensagem">
+            <p>Você atingiu seu limite de 3 tarefas pessoais por hoje!</p>
+            <p>Novos slots estarão disponíveis após o reset diário.</p>
+        </div>
+        
+        {% endif %}
+        
+        
+        <h2 class="titulo-secao-lista">Tarefas de Hoje</h2>
+        <ul class="lista-tarefas" id="lista-tarefas-ul">
+            {% for tarefa in tarefas %}
+            
+            <li class="item-tarefa {% if tarefa.falhou %}tarefa-falhada{% endif %}" id="tarefa-{{ tarefa.id_Tarefa }}">
+                
+                <div class="tarefa-info">
+                    <span class="tarefa-titulo"> {{ tarefa.titulo }} </span>
+                    <div class="tarefa-detalhes">
+                        
+                        <div class="info-bloco xp-bloco">
+                            <span class="info-label">XP</span>
+                            <span class="info-valor">{{ tarefa.xp|default:0 }}</span>
+                        </div>
+                        
+                        {% if tarefa.descricao %}
+                            <p class="task-description-full" data-fulltext="{{ tarefa.descricao|escape }}">
+                                {{ tarefa.descricao }}
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                {% if tarefa.falhou %}
+                    <div class="botoes-tarefa-container">
+                        <form method="POST" action="{% url 'home:descartar_tarefa' tarefa.id_Tarefa %}" class="formulario-descartar">
+                            {% csrf_token %}
+                            <button type="submit" class="botao-tarefa botao-descartar">
+                                Descartar
+                            </button>
+                        </form>
+                        
+                        <form method="POST" action="{% url 'home:concluir_atrasado' tarefa.id_Tarefa %}" class="formulario-concluir-atrasada">
+                            {% csrf_token %}
+                            <button type="submit" class="botao-tarefa botao-concluir-atrasada">
+                                Concluir (sem XP)
+                            </button>
+                        </form>
+                    </div>
+                
+                {% else %}
+                    <form method="POST" action="{% url 'home:concluir_tarefa' tarefa.id_Tarefa %}" class="formulario-concluir">
+                        {% csrf_token %}
+                        <button type="submit" class="botao-tarefa botao-concluir">
+                            Concluir
+                        </button>
+                    </form>
+                {% endif %}
+                
+            </li>
+            {% empty %}
+            <li class="item-tarefa-vazia" id="lista-tarefas-vazia">
+                <p>Você ainda não tem tarefas para hoje.</p>
+                <p>Crie tarefas recorrentes na página "Gerenciar Tarefas" ou aguarde suas Quests Diárias!</p>
+            </li>
+            {% endfor %}
         </ul>
-
     </div>
+{% endblock content %}
 
-    <script src="{% static 'home/js/homejs.js' %}"></script>
+
+{% block extra_scripts %}
     <script src="{% static 'home/js/lista_tarefas_ai.js' %}"></script>
-    
-</body>
-</html>
+{% endblock extra_scripts %}

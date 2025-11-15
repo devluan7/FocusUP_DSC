@@ -1,13 +1,4 @@
-﻿/* =================================== */
-/* --- Importação de Fontes Modernas --- */
-/* =================================== */
-@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700&display=swap");
-
-/* =================================== */
-/* --- Variáveis de Cor (MODO ESCURO) --- */
-/* Copiadas do estilo principal */
-/* =================================== */
-:root {
+﻿:root {
   --cor-fundo: #161a25;
   --cor-secao: #1f2333;
   --cor-texto-principal: #f8f9fa;
@@ -19,17 +10,12 @@
   --cor-branco: #ffffff;
   --gradiente-moderno: linear-gradient(135deg, var(--cor-primaria), #7b2cbf);
   --sombra-padrao: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --cor-sucesso: #4caf50; /* Verde para sucesso */
-  --cor-perigo: #f44336; /* Vermelho para perigo/recusar */
+  --cor-sucesso: #4caf50;
+  --cor-perigo: #f44336;
 }
 
-/* =================================== */
-/* --- Estilos Gerais para Páginas de Amigos --- */
-/* =================================== */
-
-/* Container principal (similar ao .painel-container) */
 .container-amigos {
-  max-width: 900px; /* Largura ajustada para listas */
+  max-width: 900px;
   margin: 2rem auto;
   padding: 0 1.5rem;
   display: flex;
@@ -37,7 +23,6 @@
   gap: 2rem;
 }
 
-/* Reutilizando o estilo .secao */
 .secao {
   background-color: var(--cor-secao);
   border-radius: 12px;
@@ -45,19 +30,28 @@
   border: 1px solid var(--cor-borda);
 }
 
-/* Estilos de Título Padrão */
 h1, h2 {
   font-family: "Poppins", sans-serif;
   font-weight: 700;
-  color: var(--cor-primaria);
-  margin-bottom: 1.5rem; /* Mais espaço após o título principal */
+  margin-bottom: 1.5rem;
 }
-h1 { font-size: 2rem; }
-h2 { font-size: 1.5rem; }
-p { color: var(--cor-texto-secundario); margin-bottom: 1rem; }
 
-/* Links como botões (reutilizando estilos) */
-.botao-link { /* Classe genérica para links que parecem botões */
+h1 {
+  font-size: 2rem;
+  color: var(--cor-texto-principal);
+}
+
+h2 {
+  font-size: 1.5rem;
+  color: var(--cor-primaria);
+}
+
+p {
+  color: var(--cor-texto-secundario);
+  margin-bottom: 1rem;
+}
+
+.botao-link {
   display: inline-block;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
@@ -67,66 +61,69 @@ p { color: var(--cor-texto-secundario); margin-bottom: 1rem; }
   font-size: 0.9rem;
   text-align: center;
   transition: all 0.2s ease;
-  margin-bottom: 1.5rem; /* Espaço após o botão */
+  margin-bottom: 1.5rem;
+  border: 2px solid transparent;
+  cursor: pointer;
 }
 
-/* Botão destaque (amarelo) */
 .botao-destaque {
   background-color: var(--cor-destaque);
   color: var(--cor-texto-preto);
-  border: 2px solid var(--cor-destaque);
+  border-color: var(--cor-destaque);
 }
+
 .botao-destaque:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 15px rgba(255, 201, 62, 0.4);
 }
 
-/* Botão secundário (outline) */
 .botao-secundario {
   background-color: transparent;
   color: var(--cor-primaria);
-  border: 2px solid var(--cor-primaria);
+  border-color: var(--cor-primaria);
 }
+
 .botao-secundario:hover {
   background-color: var(--cor-primaria);
   color: var(--cor-texto-principal);
 }
 
-/* Botão Sucesso (verde) */
 .botao-sucesso {
   background-color: var(--cor-sucesso);
   color: var(--cor-branco);
-  border: 2px solid var(--cor-sucesso);
+  border-color: var(--cor-sucesso);
 }
+
 .botao-sucesso:hover {
   background-color: #45a049;
   border-color: #45a049;
 }
 
-/* Botão Perigo (vermelho) */
 .botao-perigo {
   background-color: var(--cor-perigo);
   color: var(--cor-branco);
-  border: 2px solid var(--cor-perigo);
+  border-color: var(--cor-perigo);
 }
+
 .botao-perigo:hover {
   background-color: #e53935;
   border-color: #e53935;
 }
 
+.botao-link.botao-pequeno {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  margin-bottom: 0;
+}
 
-/* =================================== */
-/* --- Estilos Específicos --- */
-/* =================================== */
-
-/* Lista de Amigos/Pedidos */
 .lista-simples {
   list-style: none;
   padding: 0;
   margin: 0;
 }
+
 .lista-simples li {
-  background-color: var(--cor-fundo); /* Fundo um pouco mais escuro */
+  background-color: var(--cor-fundo);
   padding: 1rem 1.5rem;
   border-radius: 8px;
   margin-bottom: 1rem;
@@ -134,30 +131,33 @@ p { color: var(--cor-texto-secundario); margin-bottom: 1rem; }
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: var(--cor-texto-principal);
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-/* Botões dentro da lista de pedidos */
+.lista-simples li span {
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  color: var(--cor-texto-principal);
+}
+
 .lista-simples li .botoes-pedido {
   display: flex;
   gap: 0.75rem;
-}
-.lista-simples li .botoes-pedido a {
-  padding: 0.4rem 0.8rem; /* Botões menores */
-  font-size: 0.8rem;
+  flex-shrink: 0;
 }
 
-/* Formulário de Busca */
 .form-busca {
   display: flex;
   gap: 1rem;
   margin-bottom: 2rem;
   align-items: center;
+  flex-wrap: wrap;
 }
+
 .form-busca input[type="text"] {
-  flex-grow: 1; /* Input ocupa o espaço disponível */
+  flex-grow: 1;
   padding: 0.8rem 1rem;
   font-family: "Lato", sans-serif;
   font-size: 1rem;
@@ -166,36 +166,40 @@ p { color: var(--cor-texto-secundario); margin-bottom: 1rem; }
   border: 1px solid var(--cor-borda);
   border-radius: 8px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  min-width: 200px;
 }
+
 .form-busca input[type="text"]:focus {
   outline: none;
   border-color: var(--cor-primaria);
   box-shadow: 0 0 0 3px rgba(90, 72, 245, 0.25);
 }
+
 .form-busca button {
-  /* Reutiliza estilo do botão secundário */
   background-color: transparent;
   color: var(--cor-primaria);
   border: 2px solid var(--cor-primaria);
-  padding: 0.8rem 1.5rem; /* Ajusta padding para altura do input */
+  padding: 0.8rem 1.5rem;
   border-radius: 8px;
   font-family: "Poppins", sans-serif;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  margin-bottom: 0;
 }
+
 .form-busca button:hover {
   background-color: var(--cor-primaria);
   color: var(--cor-texto-principal);
 }
 
-/* Resultados da Busca */
 .lista-resultados {
   list-style: none;
   padding: 0;
   margin: 0;
 }
+
 .resultado-item {
   background-color: var(--cor-fundo);
   padding: 1rem 1.5rem;
@@ -205,38 +209,55 @@ p { color: var(--cor-texto-secundario); margin-bottom: 1rem; }
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
+
 .resultado-item span {
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
   color: var(--cor-texto-principal);
-  font-weight: 600;
 }
+
+.resultado-item span strong {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  color: var(--cor-texto-principal);
+}
+
 .resultado-item span small {
   color: var(--cor-texto-secundario);
   font-weight: 400;
+  margin-left: 0.25rem;
 }
 
-/* Linha divisória */
 hr {
   border: none;
   border-top: 1px solid var(--cor-borda);
   margin: 2rem 0;
 }
 
-/* Mensagens de Alerta (Django Messages) */
 .alert {
   padding: 1rem 1.5rem;
   margin-bottom: 1.5rem;
   border-radius: 8px;
   border: 1px solid transparent;
+  font-weight: 600;
 }
-.alert-success {
-  color: #d4edda;
-  background-color: #155724;
-  border-color: #1c7430;
-}
-/* Adicione .alert-error, .alert-warning, .alert-info se precisar */
 
-/* Parágrafo para quando não há amigos/pedidos */
+.alert.success, .alert.alert-success {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: var(--cor-sucesso);
+  border-color: rgba(76, 175, 80, 0.4);
+}
+
+.alert.error, .alert.alert-danger {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: var(--cor-perigo);
+  border-color: rgba(244, 67, 54, 0.4);
+}
+
 .sem-resultados {
   color: var(--cor-texto-secundario);
   font-style: italic;
@@ -245,7 +266,7 @@ hr {
 }
 
 .badge-notificacao {
-  background-color: var(--cor-perigo); /* Vermelho */
+  background-color: var(--cor-perigo);
   color: var(--cor-branco);
   border-radius: 50%;
   padding: 0.1em 0.5em;

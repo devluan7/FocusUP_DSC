@@ -1,21 +1,45 @@
-{% extends 'home/base.html' %} {% block content %}
-<div class="container">
-  <h1>Meus Amigos</h1>
+{% extends 'home/base.html' %}
+{% load static %}
 
-  <a
-    href="{% url 'home:buscar_usuarios' %}"
-    style="display: inline-block; margin-bottom: 20px"
-    >Encontrar Novos Amigos</a
-  >
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'home/css/estiloamigos.css' %}">
+{% endblock %}
 
-  {% if amigos %}
-  <ul>
-    {% for amigo in amigos %}
-    <li>{{ amigo.nome_usuario }}</li>
-    {% endfor %}
-  </ul>
-  {% else %}
-  <p>Você ainda não tem amigos. Procure por usuários e envie um pedido!</p>
-  {% endif %}
+{% block content %}
+<div class="container-amigos">
+    <section class="secao">
+        <h1>Meus Amigos</h1>
+
+        <a href="{% url 'home:buscar_usuarios' %}" class="botao-link botao-destaque">
+            Encontrar Novos Amigos
+        </a>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {{ message.tags }}">{{ message }}</div> 
+            {% endfor %}
+        {% endif %}
+
+        {% if amigos %}
+            <ul class="lista-simples">
+                {% for amigo in amigos %}
+                <li>
+                    <span>{{ amigo.nome_usuario }}</span> 
+
+                    <form action="{% url 'home:remover_amigo' amigo.nome_usuario %}" method="POST" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="botao-link botao-perigo botao-pequeno" onclick="return confirm('Tem certeza que deseja remover {{ amigo.nome_usuario }} da sua lista de amigos?');">
+                            Remover Amigo
+                        </button>
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="sem-resultados">
+                Você ainda não tem amigos. Procure por usuários e envie um pedido!
+            </p>
+        {% endif %}
+    </section>
 </div>
 {% endblock %}

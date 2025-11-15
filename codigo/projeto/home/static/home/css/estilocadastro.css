@@ -1,281 +1,202 @@
-@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+:root {
+  --cor-fundo: #161a25;
+  --cor-secao: #1f2333;
+  --cor-texto-principal: #f8f9fa;
+  --cor-texto-secundario: #a9b1d6;
+  --cor-borda: #343b58;
+  --cor-primaria: #5a48f5;
+  --cor-destaque: #ffc93e;
+  --cor-texto-preto: #212529;
+  --cor-branco: #ffffff;
+  --cor-erro: #f44336;
+}
 
-/* Reset básico */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Pixelify Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-    background-color: #484C9A;
-    color: #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto-secundario);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem 0;
 }
 
-.tela_cadastro {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding: 1rem;
+.form-container {
+  background-color: var(--cor-secao);
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  max-width: 450px;
+  width: 90%;
+  text-align: center;
 }
 
-.container_cadastro {
-    background: rgba(0, 0, 0, 0.75);
-    border-radius: 1rem;
-    padding: 2rem;
-    max-width: 400px;
-    width: 100%;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
-
+.form-logo img {
+  max-width: 80px;
+  margin-bottom: 1rem;
+  opacity: 0.8; 
 }
 
-.logo_cadastro img {
-    width: 120px;
-    height: auto;
-    filter: drop-shadow(0 0 5px #F3E020);
+.form-titulo {
+  color: var(--cor-texto-principal);
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
-.titulo_cadastro {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #F3E020;
-    text-align: center;
+.form-texto {
+  color: var(--cor-texto-secundario);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem; 
 }
 
-.subtitulo_cadastro {
-    font-size: 1rem;
-    color: #DDD;
-    text-align: center;
-    margin-bottom: 1.5rem;
+.form-container > .form-texto {
+  margin-top: 1.5rem;
+  margin-bottom: 0;
 }
 
-.form_cadastro {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+form {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
 }
 
-.campo_formulario {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
+.form-grupo {
+  margin-bottom: 1.25rem;
 }
 
-.label_formulario {
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #F3E020;
+.form-label {
+  display: block;
+  color: var(--cor-texto-secundario);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
 }
 
-.campo_formulario input,
-.campo_formulario select {
-    padding: 0.8rem 1rem;
-    border: 1px solid #ccc;
-    border-radius: 0.625rem;
-    font-size: 1rem;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    background-color: #fff;
-    color: #000;
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+select {
+  width: 100%;
+  padding: 12px 15px;
+  background-color: var(--cor-fundo);
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  color: var(--cor-texto-principal);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.campo_formulario input:focus,
-.campo_formulario select:focus {
-    border-color: #F3E020;
-    box-shadow: 0 0 5px rgba(243, 224, 32, 0.5);
-    outline: none;
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="date"]:focus,
+select:focus {
+  border-color: var(--cor-destaque);
+  box-shadow: 0 0 0 3px rgba(255, 201, 62, 0.25);
 }
 
-.botao_cadastro {
-    padding: 0.8rem 1rem;
-    background-color: #F3E020;
-    color: #1F1F5C;
-    border: none;
-    border-radius: 0.625rem;
-    font-size: 1.1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
-    margin-top: 1rem;
+input::placeholder {
+  color: #777;
 }
 
-.botao_cadastro:hover {
-    background-color: #E0D836;
-    transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(243, 224, 32, 0.4);
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23a9b1d6%22%3E%3Cpath%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 1em;
+  padding-right: 40px;
 }
 
-.links_auxiliares_cadastro {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 1rem;
+select option {
+  background-color: var(--cor-secao);
+  color: var(--cor-texto-principal);
 }
 
-.texto_login {
-    font-size: 0.9rem;
-    color: #E0D836;
+.input-com-icone {
+  position: relative;
 }
 
-.link_login {
-    color: #F3E020;
-    font-weight: 700;
-    text-decoration: none;
-    transition: color 0.3s;
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
 }
 
-.link_login:hover {
-    color: #E0D836;
+.input-icone {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  user-select: none;
+  color: var(--cor-texto-secundario);
 }
 
-
-.checkbox_termos {
-    font-size: 0.9rem;
-    color: #fff; /* texto branco */
+.form-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  margin-top: 0.5rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.9rem;
 }
 
-.checkbox_termos a.link_termos {
-    color: #F3E020; /* link amarelo */
-    text-decoration: none;
-    transition: color 0.3s;
+.form-checkbox input[type="checkbox"] {
+  margin-right: 0.75rem;
+  width: auto;
+  accent-color: var(--cor-destaque);
 }
 
-.checkbox_termos a.link_termos:hover {
-    color: #E0D836; /* amarelo mais suave ao passar o mouse */
+.form-link {
+  color: var(--cor-primaria);
+  text-decoration: none;
+  font-weight: 500;
 }
 
-
-
-/*Visualizar Senha*/
-.input_olho {
-    position: relative;
+.form-link:hover {
+  text-decoration: underline;
 }
 
-.input_olho .olho {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    font-size: 18px;
-    color: #666;
+.botao-destaque {
+  background-color: var(--cor-destaque);
+  color: var(--cor-texto-preto);
+  border: none;
+  border-radius: 6px;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 1rem;
 }
 
-
-/*Erros*/
-.erro_campo {
-    color: #ff4d4d;
-    font-size: 0.9rem;
-    margin-top: 5px;
+.botao-destaque:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(255, 201, 62, 0.4);
 }
 
-/*Desktop*/
-@media screen and (min-width: 1024px) {
-    body {
-        justify-content: flex-start;
-        padding-top: 5vh;
-        background: linear-gradient(135deg, #484C9A, #1E1E3F);
-    }
+.botao-destaque:active {
+  transform: scale(0.99);
+}
 
-    .tela_cadastro {
-        justify-content: center;
-        align-items: flex-start;
-        padding: 2rem;
-        width: 100%;
-    }
-
-    .container_cadastro {
-        max-width: 500px;
-        padding: 3rem;
-        margin: 0 auto;
-        background: rgba(0, 0, 0, 0.75);
-        border-radius: 1.25rem;
-        box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 2rem;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .container_cadastro:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-    }
-
-    .logo_cadastro img {
-        width: 150px;
-        filter: drop-shadow(0 0 8px #F3E020);
-    }
-
-    .titulo_cadastro {
-        font-size: 2.5rem;
-        text-align: center;
-    }
-
-    .subtitulo_cadastro {
-        font-size: 1.2rem;
-        color: #DDD;
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-
-    .form_cadastro {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 1.2rem;
-    }
-
-    .campo_formulario input,
-    .campo_formulario select {
-        padding: 1rem 1.2rem;
-        font-size: 1.1rem;
-        border-radius: 0.75rem;
-        border: 1px solid #ccc;
-    }
-
-    .campo_formulario input:focus,
-    .campo_formulario select:focus {
-        border-color: #F3E020;
-        box-shadow: 0 0 8px rgba(243, 224, 32, 0.6);
-        outline: none;
-    }
-
-    .botao_cadastro {
-        padding: 1rem 1.2rem;
-        font-size: 1.1rem;
-        background-color: #F3E020;
-        color: #000;
-        font-weight: 700;
-        border-radius: 0.75rem;
-    }
-
-    .botao_cadastro:hover {
-        background-color: #e6d01f;
-        transform: scale(1.05);
-        box-shadow: 0 0 15px rgba(243,224,32,0.6);
-    }
-
-    .links_auxiliares_cadastro {
-        flex-direction: row;
-        justify-content: space-between;
-        width: 100%;
-    }
-
-    .texto_login,
-    .link_login {
-        font-size: 1rem;
-    }
+.form-error {
+  color: var(--cor-erro);
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  text-align: left;
 }

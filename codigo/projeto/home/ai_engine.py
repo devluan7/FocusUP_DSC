@@ -9,7 +9,7 @@ import time
 
 logger = logging.getLogger(__name__)
 
-# --- NOSSO SISTEMA DE XP ---
+
 XP_POR_DIFICULDADE = {
     "facil": 10,
     "medio": 25,
@@ -17,7 +17,7 @@ XP_POR_DIFICULDADE = {
     "hiperdificil": 100
 }
 DIFICULDADES_VALIDAS = ["facil", "medio", "dificil"] 
-# ------------------------------------
+
 
 @dataclass
 class TarefaSugerida:
@@ -35,7 +35,6 @@ class FocusAIEngine:
         logger.info(f"[FocusAIEngine] Motor de IA: modelo={self.model}, timeout={self.timeout}s, retries={self.max_retries}.")
 
     def _chamar_ollama(self, prompt: str) -> Optional[Dict[str, Any]]:
-        # (Função _chamar_ollama com retentativas - SEM MUDANÇAS)
         payload = {"model": self.model, "prompt": prompt, "format": "json", "stream": False}
         last_exception = None
         for attempt in range(self.max_retries + 1):
@@ -49,14 +48,14 @@ class FocusAIEngine:
                 response.raise_for_status()
                 response_data = response.json()
                 if 'response' in response_data:
-                     try:
-                         json_interno = json.loads(response_data['response'])
-                         logger.debug(f"[FocusAIEngine] Ollama retornou JSON válido.")
-                         return json_interno
-                     except json.JSONDecodeError as json_err:
-                         logger.error(f"[FocusAIEngine] Tentativa {attempt + 1}: Erro JSON: {json_err}")
-                         logger.error(f"[FocusAIEngine] Resposta (string): {response_data['response']}")
-                         last_exception = json_err
+                    try:
+                        json_interno = json.loads(response_data['response'])
+                        logger.debug(f"[FocusAIEngine] Ollama retornou JSON válido.")
+                        return json_interno
+                    except json.JSONDecodeError as json_err:
+                        logger.error(f"[FocusAIEngine] Tentativa {attempt + 1}: Erro JSON: {json_err}")
+                        logger.error(f"[FocusAIEngine] Resposta (string): {response_data['response']}")
+                        last_exception = json_err
                 else:
                     logger.error(f"[FocusAIEngine] Tentativa {attempt + 1}: Chave 'response' não encontrada.")
                     last_exception = ValueError("Chave 'response' não encontrada")
@@ -67,16 +66,13 @@ class FocusAIEngine:
         if last_exception: logger.error(f"[FocusAIEngine] Último erro: {type(last_exception).__name__}: {last_exception}")
         return None
 
-    # --- FUNÇÃO ATUALIZADA ---
     def gerar_sugestao_tarefa_diaria(self, perfil_usuario: dict) -> Optional[TarefaSugerida]:
         
         instrucao_tipo = "Sugira UMA (1) MISSÃO DIÁRIA."
         num_sugestoes = 1
         
-        # Pega o dia da semana (ex: "terça-feira")
         dia_da_semana = perfil_usuario.get("dia_da_semana", "hoje")
         
-        # === PROMPT ATUALIZADO (FOCO EM GAMIFICAÇÃO E VARIEDADE) ===
         prompt_geracao = f"""
         Você é o "FocusBuddy", um Mestre de Jogo (Game Master) criativo e encorajador. Sua missão é criar {num_sugestoes} "Missão Diária" (tarefa) para o jogador.
 
@@ -102,7 +98,6 @@ class FocusAIEngine:
         **Retorne APENAS um objeto JSON com a chave "sugestoes"**, contendo uma lista com {num_sugestoes} missão(ões).
         Cada missão DEVE ter as chaves **"titulo"** (em português), **"descricao_motivacional"** (em português), e **"dificuldade"**.
         """
-        # === FIM DO NOVO PROMPT ===
 
         try:
             logger.info(f"[FocusAIEngine] Gerando sugestão diária para foco '{perfil_usuario.get('foco_nome', 'N/A')}' (Dia: {dia_da_semana})...")
@@ -114,8 +109,6 @@ class FocusAIEngine:
 
             tarefa_data = resposta_json["sugestoes"][0]
             
-            # === CORREÇÃO "title" vs "titulo" (Robusta) ===
-            # Tenta várias chaves comuns, priorizando português
             titulo = (tarefa_data.get("titulo") or 
                       tarefa_data.get("title") or 
                       tarefa_data.get("Título") or 
@@ -125,21 +118,18 @@ class FocusAIEngine:
                     tarefa_data.get("description_motivacional") or 
                     tarefa_data.get("descrição_motivacional") or 
                     tarefa_data.get("descricao"))
-            # ============================================
 
-            diff = tarefa_data.get("dificuldade", "facil").lower() # Pega e normaliza
+            diff = tarefa_data.get("dificuldade", "facil").lower()
 
             if not titulo or not isinstance(titulo, str) or not desc or not isinstance(desc, str):
                  logger.error(f"[FocusAIEngine] IA retornou dados incompletos (após fallback): {tarefa_data}")
                  return None
             
-            # Garante que dificuldade seja uma das válidas
             if diff not in DIFICULDADES_VALIDAS:
                 logger.warning(f"[FocusAIEngine] Dificuldade inválida '{diff}', usando 'facil'.")
                 diff = "facil" 
 
-            # Calcula o XP usando o mapeamento (10, 25, 50)
-            xp_calculado = XP_POR_DIFICULDADE.get(diff, 10) # Usa 10 como fallback
+            xp_calculado = XP_POR_DIFICULDADE.get(diff, 10)
 
             sugestao = TarefaSugerida(titulo=titulo, descricao_motivacional=desc, dificuldade=diff, xp_calculado=xp_calculado)
             logger.info(f"[FocusAIEngine] Sugestão gerada: '{sugestao.titulo}' (Dificuldade: {diff}, XP: {xp_calculado})")

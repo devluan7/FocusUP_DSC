@@ -36,7 +36,7 @@
           </nav>
           
           <button class="profile-avatar perfil-foto-container" id="profile-dropdown-trigger" aria-label="Abrir menu do perfil" aria-expanded="false" tabindex="0">
-            <img src="https://static.wikia.nocookie.net/naruto/images/d/d7/Naruto_Uzumaki_%28Parte_I_-_Genin%29.png" alt="Avatar do Usuário" class="perfil-foto">
+            <img src="{% static 'home/img/ue.png' %}" alt="Avatar do Usuário" class="perfil-foto">
             
             <span class="level-badge level-badge-display">
               {{ user.nivel|default:1 }}
@@ -54,7 +54,7 @@
     <div class="profile-dropdown" id="profile-dropdown">
       <ul>
         <li><a href="{% url 'home:editar_perfil' %}" {% if request.resolver_match.url_name == 'editar_perfil' %}class="ativo"{% endif %}>Meu Perfil</a></li> 
-        <li><a href="{% url 'home:meu_perfil_focos' %}" {% if request.resolver_match.url_name == 'meu_perfil_focos' %}class="ativo"{% endif %}>Perfil Focos</a></li>
+        <li><a href="{% url 'home:meu_perfil' %}" {% if request.resolver_match.url_name == 'meu_perfil' %}class="ativo"{% endif %}>Perfil Focos</a></li>
         <li class="dropdown-divisor"><hr></li>
         <li><a href="{% url 'home:logout' %}" class="dropdown-sair">Sair</a></li>
       </ul>
@@ -81,7 +81,7 @@
       <div class="profile-dropdown-mobile" id="profile-dropdown-mobile">
         <ul>
           <li><a href="{% url 'home:editar_perfil' %}" {% if request.resolver_match.url_name == 'editar_perfil' %}class="ativo"{% endif %}>Meu Perfil</a></li>
-          <li><a href="{% url 'home:meu_perfil_focos' %}" {% if request.resolver_match.url_name == 'meu_perfil_focos' %}class="ativo"{% endif %}>Perfil Focos</a></li>
+          <li><a href="{% url 'home:meu_perfil' %}" {% if request.resolver_match.url_name == 'meu_perfil' %}class="ativo"{% endif %}>Perfil Focos</a></li>
           <li class="dropdown-divisor"><hr></li>
           <li><a href="{% url 'home:logout' %}" class="dropdown-sair">Sair</a></li>
         </ul>

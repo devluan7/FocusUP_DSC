@@ -1,53 +1,103 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{% static 'home/css/estilomain.css' %}" />
-    <title>FocusUP</title>
-  </head>
-  <body>
-    <header class="cabecalho">
-      <div class="nav_bar">
-        <div class="menu_hamburguer" id="menuBtn">☰</div>
-        <ul class="lista_nav" id="menuMobile">
-          <li><a href="{% url 'home:home' %}">Início</a></li>
-          <li><a href="{% url 'home:lista_Tarefas' %}">Meus Hábitos</a></li>
-          <li><a href="{% url 'home:listar_amigos' %}">Amigos</a></li>
-          <li><a href="{% url 'home:listar_pedidos_amizade' %}">Pedidos</a></li>
-          <li><a href="{% url 'home:home' %}#evolucaoID">Evolução</a></li>
-          {% if user.is_authenticated %}
-          <li><a href="{% url 'home:logout' %}" class="btn_sair">Sair</a></li>
-          {% endif %}
-        </ul>
-      </div>
-      <div class="div_logo">
-        <img
-          src="{% static 'home/img/Logo.png' %}"
-          alt="Logo"
-          class="logo_focus"
-        />
-      </div>
-      {% if user.is_authenticated %}
-      <div class="usuario_logado">
-        <p class="txt_usuario">Bem-vindo(a), {{ user.nome_usuario }}</p>
-        <div class="usuario_stats">
-          <div class="stat">
-            <span class="stat_label">Nível</span
-            ><span class="stat_valor">{{ user.nivel }}</span>
-          </div>
-          <div class="stat">
-            <span class="stat_label">XP</span
-            ><span class="stat_valor">{{ user.xp_atual }}</span>
-          </div>
+    <title>{% block title %}FocusUP{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700&display=swap"
+        rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="{% static 'home/css/estilohome.css' %}" />
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+    <header class="cabecalho-principal">
+        <div class="container-cabecalho">
+            
+            <a href="{% url 'home:home' %}" class="logo">
+                <img src="{% static 'home/img/LogoOFC.png' %}" alt="FocusUP Logo">
+            </a>
+            
+            <div class="menu-desktop-container">
+                <nav class="navegacao-principal">
+                    <ul>
+                        <li><a href="{% url 'home:home' %}" {% if request.resolver_match.url_name == 'home' %}class="ativo"{% endif %}>Painel</a></li>
+                        <li><a href="{% url 'home:lista_Tarefas' %}" {% if request.resolver_match.url_name == 'lista_Tarefas' %}class="ativo"{% endif %}>Tarefas</a></li>
+                        <li><a href="{% url 'home:listar_amigos' %}" {% if request.resolver_match.url_name == 'listar_amigos' or request.resolver_match.url_name == 'buscar_usuarios' or request.resolver_match.url_name == 'listar_pedidos_amizade' %}class="ativo"{% endif %}>Amigos</a></li>
+                    </ul>
+                </nav>
+                
+                <button class="profile-avatar perfil-foto-container" id="profile-dropdown-trigger" aria-label="Abrir menu do perfil" aria-expanded="false" tabindex="0">
+                    <img src="{% static 'home/img/ue.png' %}" alt="Avatar do Usuário" class="perfil-foto">
+                    
+                    <span class="level-badge level-badge-display">
+                        {{ user.nivel|default:1 }}
+                    </span>
+                </button>
+            </div>
+
+            <button class="botao-menu-mobile" id="botao-menu-mobile" aria-label="Abrir menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
         </div>
-      </div>
-      {% endif %}
     </header>
 
-    {% block content %} {% endblock %}
+    <div class="profile-dropdown" id="profile-dropdown">
+        <ul>
+            <li><a href="{% url 'home:editar_perfil' %}" {% if request.resolver_match.url_name == 'editar_perfil' %}class="ativo"{% endif %}>Meu Perfil</a></li> 
+            <li><a href="{% url 'home:meu_perfil' %}" {% if request.resolver_match.url_name == 'meu_perfil' %}class="ativo"{% endif %}>Perfil Focos</a></li>
+            <li class="dropdown-divisor"><hr></li>
+            <li><a href="{% url 'home:logout' %}" class="dropdown-sair">Sair</a></li>
+        </ul>
+    </div>
 
-    <script src="{% static 'home/js/menu_mobile.js' %}"></script>
-  </body>
+    <div class="menu-mobile-overlay" id="menu-mobile-overlay">
+        
+        <button class="profile-avatar-mobile perfil-foto-container" id="profile-dropdown-trigger-mobile" aria-label="Abrir menu do perfil" aria-expanded="false" tabindex="0">
+            <img src="https://static.wikia.nocookie.net/naruto/images/d/d7/Naruto_Uzumaki_%28Parte_I_-_Genin%29.png" alt="Avatar do Usuário" class="perfil-foto">
+            <span>{{ user.nome_usuario|default:user.email }}</span>
+            
+            <span class="level-badge level-badge-display">
+                {{ user.nivel|default:1 }}
+            </span>
+        </button>
+        
+        <div class="profile-dropdown-mobile" id="profile-dropdown-mobile">
+            <ul>
+                <li><a href="{% url 'home:editar_perfil' %}" {% if request.resolver_match.url_name == 'editar_perfil' %}class="ativo"{% endif %}>Meu Perfil</a></li>
+                <li><a href="{% url 'home:meu_perfil' %}" {% if request.resolver_match.url_name == 'meu_perfil' %}class="ativo"{% endif %}>Perfil Focos</a></li>
+            </ul>
+        </div>
+
+        <nav class="navegacao-mobile">
+            <ul>
+                <li><a href="{% url 'home:home' %}" {% if request.resolver_match.url_name == 'home' %}class="ativo"{% endif %}>Painel</a></li>
+                <li><a href="{% url 'home:lista_Tarefas' %}" {% if request.resolver_match.url_name == 'lista_Tarefas' %}class="ativo"{% endif %}>Tarefas</a></li>
+                <li><a href="{% url 'home:listar_amigos' %}" {% if request.resolver_match.url_name == 'listar_amigos' or request.resolver_match.url_name == 'buscar_usuarios' or request.resolver_match.url_name == 'listar_pedidos_amizade' %}class="ativo"{% endif %}>Amigos</a></li>
+                <li class="dropdown-divisor"><hr></li>
+                <li><a href="{% url 'home:logout' %}" class="dropdown-sair">Sair</a></li>
+            </ul>
+        </nav>
+    </div>
+    
+    {% block content %}
+    {% endblock %}
+
+
+    <script src="{% static 'home/js/homejs.js' %}"></script>
+
+    {% block extra_scripts %}{% endblock %}
+
+</body>
 </html>

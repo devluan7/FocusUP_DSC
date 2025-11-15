@@ -1,6 +1,4 @@
-﻿# home/context_processors.py
-# Verifique se o caminho para PedidoAmizade está correto aqui!
-from .models.amigo import PedidoAmizade # Ou from .models.pedido_amizade import PedidoAmizade
+﻿from .models.amigo import PedidoAmizade 
 
 def pending_requests_count(request):
     """

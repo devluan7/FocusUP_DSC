@@ -1,10 +1,7 @@
-# home/models/loja.py
-
 from django.db import models
 from .usuario import Usuario
 
 class ItemLoja(models.Model):
-    # Exemplo de choices, você pode adicionar mais
     TIPO_CHOICES = [
         ('AVATAR', 'Avatar'),
         ('ITEM_PODER', 'Item de Poder'),
@@ -23,7 +20,8 @@ class ItemLoja(models.Model):
 class Compra(models.Model):
     id_compra = models.AutoField(primary_key=True)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    item = models.ForeignKey(ItemLoja, on_delete=models.PROTECT) # PROTECT evita apagar um item que já foi comprado
+    # PROTECT não deixa apagar o item se alguém já comprou ele
+    item = models.ForeignKey(ItemLoja, on_delete=models.PROTECT) 
     data_compra = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

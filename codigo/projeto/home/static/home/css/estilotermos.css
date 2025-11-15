@@ -1,109 +1,107 @@
-@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+/* =================================== */
+/* --- Importação de Fontes Modernas --- */
+/* =================================== */
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700&display=swap");
 
-/* Reset básico */
+/* =================================== */
+/* --- Variáveis de Cor (MODO ESCURO) --- */
+/* =================================== */
+:root {
+  --cor-fundo: #161a25;
+  --cor-secao: #1f2333;
+  --cor-texto-principal: #f8f9fa;
+  --cor-texto-secundario: #a9b1d6;
+  --cor-borda: #343b58;
+  --cor-primaria: #5a48f5;
+  --cor-destaque: #ffc93e;
+  --cor-texto-preto: #212529;
+  --cor-branco: #ffffff;
+  --gradiente-moderno: linear-gradient(135deg, var(--cor-primaria), #7b2cbf);
+  --sombra-padrao: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* =================================== */
+/* --- Configurações Globais --- */
+/* =================================== */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Pixelify Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    background-color: #484C9A;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    color: #fff;
-    padding: 1rem;
+  font-family: "Lato", sans-serif;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto-secundario);
+  line-height: 1.6;
+  padding: 2rem 1rem; /* Espaçamento para o container */
 }
 
-.tela_termos {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+/* =================================== */
+/* --- Estilos da Página de Termos --- */
+/* =================================== */
+
+.termos-container {
+  width: 100%;
+  max-width: 800px; /* Mais largo para texto */
+  margin: 2rem auto;
+  padding: 2rem 2.5rem;
+  background-color: var(--cor-secao);
+  border-radius: 12px;
+  border: 1px solid var(--cor-borda);
 }
 
-.container_termos {
-    background: rgba(0, 0, 0, 0.75);
-    border-radius: 1rem;
-    padding: 2rem;
-    max-width: 600px;
-    width: 100%;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+.termos-logo {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.termos-logo img {
+  width: 100px;
+  height: auto;
 }
 
-.logo_termos {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 1rem;
+.termos-titulo {
+  font-family: "Poppins", sans-serif;
+  color: var(--cor-texto-principal);
+  font-size: 2.25rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--cor-borda); /* Linha divisória */
+  padding-bottom: 1rem;
 }
 
-.logo_termos img {
-    width: 120px;
-    height: auto;
-    filter: drop-shadow(0 0 5px #F3E020);
+.termos-conteudo {
+  font-size: 1rem;
+  line-height: 1.7;
 }
 
-.titulo_termos {
-    font-size: 2rem;
-    color: #F3E020;
-    text-align: center;
+.termos-conteudo p {
+  margin-bottom: 1.5rem;
 }
 
-.conteudo_termos {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #fff;
+.termos-conteudo ul {
+  margin-left: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-.conteudo_termos ul {
-    margin-left: 1.5rem;
-    margin-bottom: 1rem;
+.termos-conteudo li {
+  margin-bottom: 0.75rem;
 }
 
-.conteudo_termos li {
-    margin-bottom: 0.5rem;
-}
-
-/* Desktop */
+/* ===================== */
+/* RESPONSIVIDADE (DESKTOP) */
+/* ===================== */
 @media screen and (min-width: 1024px) {
-    body {
-        justify-content: flex-start;
-        padding-top: 5vh;
-        background: linear-gradient(135deg, #484C9A, #1E1E3F);
-    }
+  .termos-container {
+    padding: 3rem 4rem;
+  }
 
-    .tela_termos {
-        justify-content: center;
-        align-items: flex-start;
-        padding: 2rem;
-        width: 100%;
-    }
+  .termos-titulo {
+    font-size: 2.75rem;
+  }
 
-    .container_termos {
-        max-width: 700px;
-        padding: 3rem;
-        margin: 0 auto;
-        border-radius: 1.25rem;
-        box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-    }
-
-    .logo_termos img {
-        width: 150px;
-        filter: drop-shadow(0 0 8px #F3E020);
-    }
-
-    .titulo_termos {
-        font-size: 2.5rem;
-    }
-
-    .conteudo_termos {
-        font-size: 1.1rem;
-        line-height: 1.8;
-    }
+  .termos-conteudo {
+    font-size: 1.1rem;
+  }
 }

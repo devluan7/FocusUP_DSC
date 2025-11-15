@@ -1,8 +1,6 @@
-# home/models/amigo.py
 from django.db import models
 from .usuario import Usuario
 
-# SEU MODELO ATUAL (está bom para registrar a amizade)
 class Amigo(models.Model):
     usuario = models.ForeignKey(Usuario, related_name='amigos', on_delete=models.CASCADE)
     amigo = models.ForeignKey(Usuario, related_name='amigo_de', on_delete=models.CASCADE)
@@ -16,7 +14,6 @@ class Amigo(models.Model):
     def __str__(self):
         return f'{self.usuario.nome_usuario} é amigo de {self.amigo.nome_usuario}'
 
-# NOVO MODELO PARA GERENCIAR OS PEDIDOS
 class PedidoAmizade(models.Model):
     STATUS_CHOICES = (
         ('pendente', 'Pendente'),

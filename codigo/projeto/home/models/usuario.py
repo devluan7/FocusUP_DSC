@@ -1,12 +1,10 @@
-# home/models/usuario.py
-
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.utils import timezone 
+from datetime import date, time 
 
-# --- IMPORT NECESSÁRIO PARA O LOGGER ---
 import logging
 logger = logging.getLogger(__name__)
-# -------------------------------------
 
 
 class UsuarioManager(BaseUserManager):
@@ -14,14 +12,12 @@ class UsuarioManager(BaseUserManager):
         if not email:
             raise ValueError("O usuário precisa de um email")
         email = self.normalize_email(email)
-
         user = self.model(
             email=email,
             nome=nome,
             nome_usuario=nome_usuario,
             **extra_fields
         )
-        
         user.set_password(senha)
         user.save(using=self._db)
         return user
@@ -29,12 +25,10 @@ class UsuarioManager(BaseUserManager):
     def create_superuser(self, email, nome, nome_usuario, senha=None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
-
         if extra_fields.get("is_staff") is not True:
             raise ValueError("Superuser must have is_staff=True.")
         if extra_fields.get("is_superuser") is not True:
             raise ValueError("Superuser must have is_superuser=True.")
-            
         return self.create_user(email, nome, nome_usuario, senha, **extra_fields)
 
 
@@ -53,12 +47,9 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     
     foco = models.CharField(max_length=50, null=True, blank=True, verbose_name='Área de foco')
     
-    # --- CAMPOS DE NÍVEL E XP ---
     nivel = models.IntegerField(default=1)
     xp_atual = models.IntegerField(default=0)
-    # --- NOVO CAMPO ---
     xp_proximo_nivel = models.IntegerField(default=100, verbose_name='XP para o próximo nível')
-    # -------------------
     
     ofensiva = models.IntegerField(null=True, blank=True, verbose_name='Poder de ataque do avatar')
     avatar = models.CharField(max_length=255, null=True, blank=True)
@@ -67,63 +58,77 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
-    # --- CAMPOS PARA O FOCO DIÁRIO ---
     dias_foco = models.IntegerField(default=0, verbose_name='Dias de Foco (Streak)')
     ultimo_resgate_foco = models.DateTimeField(null=True, blank=True, verbose_name='Último Resgate de Foco')
-    # --------------------------------------
-
+    
+    slots_tarefas_pessoais_usados = models.IntegerField(default=0, verbose_name="Slots de tarefas pessoais usados hoje")
+    
+    data_reset_slots = models.DateField(default=date.today, verbose_name="Último dia que os slots foram resetados")
+    
+    tarefas_concluidas_prazo_count = models.IntegerField(default=0, verbose_name="Contador de tarefas concluídas (no prazo)")
+    tarefas_concluidas_atrasadas_count = models.IntegerField(default=0, verbose_name="Contador de tarefas concluídas (atrasadas)")
+    tarefas_descartadas_count = models.IntegerField(default=0, verbose_name="Contador de tarefas descartadas")
+    
     objects = UsuarioManager()
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["nome", "nome_usuario"]
 
-    # --- CONSTANTES E MÉTODOS DE NÍVEL (NOVOS) ---
     XP_BASE_PARA_NIVEL_2 = 100
-    XP_MULTIPLICADOR = 1.5 # 50% a mais de XP por nível
+    XP_MULTIPLICADOR = 1.5 
+    LIMITE_SLOTS_PESSOAIS = 3
+    
+    # Hora que o dia vira no jogo (tipo 18:57)
+    HORA_CORTE_RESET = time(18, 57, 0) 
 
     def adicionar_xp(self, quantidade):
-        """
-        Adiciona XP ao usuário e chama a verificação de level up.
-        """
         if quantidade <= 0:
             return False
-            
         self.xp_atual += quantidade
         logger.debug(f"Usuário {self.email} ganhou {quantidade} XP. Total agora: {self.xp_atual}")
-        
-        # Chama a função de verificação de level up
+        self.save(update_fields=['xp_atual'])
         return self.verificar_level_up()
 
     def verificar_level_up(self):
-        """
-        Verifica se o XP atual é suficiente para subir de nível.
-        Usa um 'while' para o caso de o usuário ganhar XP para vários níveis.
-        Retorna True se o usuário subiu de nível, False caso contrário.
-        """
         upou = False 
-        
+        # Loop pra garantir que ele suba quantos níveis precisar de uma vez
         while self.xp_atual >= self.xp_proximo_nivel:
             upou = True
-            
-            # 1. Subiu de nível!
             self.nivel += 1
-            
-            # 2. Deduz o XP que foi "gasto" para subir
             xp_excedente = self.xp_atual - self.xp_proximo_nivel
-            
-            # 3. Calcula o novo XP necessário para o *próximo* nível
             novo_xp_necessario = int(
                 self.XP_BASE_PARA_NIVEL_2 * (self.XP_MULTIPLICADOR ** (self.nivel - 1))
             )
-            
-            # 4. Atualiza os campos
             self.xp_atual = xp_excedente
             self.xp_proximo_nivel = novo_xp_necessario
-            
+            self.save(update_fields=['xp_atual', 'xp_proximo_nivel', 'nivel'])
             logger.info(f"Usuário {self.email} UPOU! Nível: {self.nivel}. XP atual: {self.xp_atual}. Próximo nível: {self.xp_proximo_nivel} XP.")
-
         return upou
-    # --- FIM DOS MÉTODOS DE NÍVEL ---
+        
+    def get_inicio_dia_de_jogo_atual(self):
+        # Descobre quando começou o "dia" atual do jogo, baseado na hora de corte
+        agora = timezone.localtime(timezone.now())
+        hora_corte_int = self.HORA_CORTE_RESET.hour
+        minuto_corte_int = self.HORA_CORTE_RESET.minute
+        
+        if agora.time() < self.HORA_CORTE_RESET:
+            inicio_dia = agora.replace(hour=hora_corte_int, minute=minuto_corte_int, second=0, microsecond=0) - timezone.timedelta(days=1)
+        else:
+            inicio_dia = agora.replace(hour=hora_corte_int, minute=minuto_corte_int, second=0, microsecond=0)
+        
+        return inicio_dia
+
+    def resetar_slots_tarefas_pessoais(self):
+        # Zera os slots se o dia do jogo mudou
+        data_do_dia_de_jogo_atual = self.get_inicio_dia_de_jogo_atual().date()
+        
+        if self.data_reset_slots < data_do_dia_de_jogo_atual:
+            logger.info(f"Resetando slots de tarefas para o usuário {self.email}. Data antiga: {self.data_reset_slots}, Data nova: {data_do_dia_de_jogo_atual}")
+            self.slots_tarefas_pessoais_usados = 0
+            self.data_reset_slots = data_do_dia_de_jogo_atual 
+            self.save(update_fields=['slots_tarefas_pessoais_usados', 'data_reset_slots'])
+        
+        return self.slots_tarefas_pessoais_usados
 
     def __str__(self):
         return self.email

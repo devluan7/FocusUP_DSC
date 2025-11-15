@@ -5,20 +5,20 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse
-from datetime import time, datetime # <-- datetime ADICIONADO
+from datetime import time, datetime 
 from django.utils import timezone
-from ..models import Tarefa, UsuarioFoco, Conquista, UsuarioConquista
+from ..models import Tarefa, UsuarioFoco, Conquista, UsuarioConquista, Usuario
 from ..forms import TarefaForm
 from ..ai_engine import FocusAIEngine, TarefaSugerida
+from ..tasks.motor_tasks import processar_slots_diarios
 import json
 import logging
-import locale # <-- ADICIONADO PARA O DIA DA SEMANA
+import locale 
 
 logger = logging.getLogger(__name__)
 
-# --- Função de conquistas ---
+
 def verificar_e_conceder_conquistas_de_tarefas(usuario):
-    # (Código da função igual ao anterior)
     try:
         tarefas_concluidas_count = Tarefa.objects.filter(usuario=usuario, concluida=True).count()
         conquistas_por_tarefas = { "Iniciante Esforçado": 1, "Mestre das 5 Tarefas": 5, "Produtividade em Pessoa": 10, "Lenda das 25 Tarefas": 25,}
@@ -33,111 +33,118 @@ def verificar_e_conceder_conquistas_de_tarefas(usuario):
         logger.error(f"Erro ao verificar conquistas para usuário ID {getattr(usuario, 'pk', 'N/A')}: {e}", exc_info=True)
 
 
-# --- View lista_Tarefas ---
 @login_required
 def lista_Tarefas(request):
-    # (Código da view igual ao anterior, filtrando concluida=False)
     tarefas_do_usuario = []
     perfis_usuario = []
     erro_carregamento = False
     try:
-        tarefas_do_usuario = Tarefa.objects.filter(usuario=request.user, concluida=False).order_by('-data_criacao')
+        processar_slots_diarios(request.user)
+        slots_usados_hoje = request.user.slots_tarefas_pessoais_usados
+    except Exception as e:
+        logger.exception(f"Erro ao processar slots para o usuário {request.user.email}")
+        slots_usados_hoje = 0 
+    try:
+        tarefas_do_usuario = Tarefa.objects.filter(
+            usuario=request.user, 
+            concluida=False,
+            descartada=False, 
+            tipo_tarefa__in=['PESSOAL', 'DIARIA'] 
+        ).order_by('-data_criacao')
         perfis_usuario = UsuarioFoco.objects.filter(user=request.user).order_by('foco_nome')
     except Exception as e:
         logger.exception(f"Erro ao carregar dados para lista_Tarefas (usuário ID: {getattr(request.user, 'pk', 'N/A')}):")
         messages.error(request, "Ocorreu um erro ao carregar seus dados. Tente novamente.")
         erro_carregamento = True
-    contexto = { 'tarefas': tarefas_do_usuario, 'perfis_usuario': perfis_usuario, 'erro_carregamento': erro_carregamento }
-    return render(request, 'home/tarefas/lista_Tarefas.html', contexto) # Verifique caminho!
+    contexto = { 
+        'tarefas': tarefas_do_usuario, 
+        'perfis_usuario': perfis_usuario, 
+        'erro_carregamento': erro_carregamento,
+        'slots_usados': slots_usados_hoje,
+        'slots_limite': Usuario.LIMITE_SLOTS_PESSOAIS 
+    }
+    return render(request, 'home/tarefas/lista_Tarefas.html', contexto)
 
 
-# --- View adicionar_Tarefas ---
 @login_required
 def adicionar_Tarefas(request):
     try:
         perfis_usuario = UsuarioFoco.objects.filter(user=request.user)
         form = TarefaForm(request.POST or None)
-
+        try:
+            slots_usados_hoje = request.user.resetar_slots_tarefas_pessoais()
+        except Exception as e:
+            logger.exception(f"Erro ao resetar slots para o usuário {request.user.email} em adicionar_Tarefas")
+            slots_usados_hoje = Usuario.LIMITE_SLOTS_PESSOAIS 
         if request.method == 'POST':
             action = None; data = {}; is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.headers.get('Content-Type') == 'application/json'
-            if is_ajax and request.headers.get('Content-Type') == 'application/json':
+            if not is_ajax: 
+                action = 'salvar_manual'
+            else:
                 try: data = json.loads(request.body); action = data.get('action')
                 except json.JSONDecodeError: logger.warning("POST JSON inválido."); return JsonResponse({'error': 'JSON inválido.'}, status=400)
-            elif not is_ajax: action = 'salvar_manual'
-            else: logger.warning(f"POST AJAX Content-Type inesperado"); return JsonResponse({'error': 'Tipo requisição inválida.'}, status=400)
-
-            # --- CASO 1: AJAX para Gerar Sugestão IA (ATUALIZADO) ---
-            if action == 'gerar_sugestao':
-                foco_nome = data.get('foco_nome'); logger.info(f"AJAX gerar IA. Foco: {foco_nome}")
+            if action == 'salvar_sugestao':
+                if slots_usados_hoje >= Usuario.LIMITE_SLOTS_PESSOAIS:
+                    return JsonResponse({'error': 'Você já atingiu seu limite de 3 tarefas pessoais por hoje.'}, status=403) 
+                titulo = data.get('titulo'); descricao = data.get('descricao')
+                xp_recebido = data.get('xp', 10)
+                if not titulo or not descricao: return JsonResponse({'error': 'Dados faltando.'}, status=400)
                 try:
-                    if not foco_nome: return JsonResponse({'error': 'Foco não fornecido.'}, status=400)
-                    perfil_foco = get_object_or_404(UsuarioFoco, user=request.user, foco_nome=foco_nome)
-                    
-                    # --- MUDANÇA AQUI: Adiciona dia da semana ---
-                    try:
-                        # Tenta configurar o locale para Português do Brasil
-                        locale.setlocale(locale.LC_TIME, 'pt_BR.UTF-8')
-                    except locale.Error:
-                        logger.warning("Locale 'pt_BR.UTF-8' não encontrado, tentando 'Portuguese_Brazil.1252' (Windows).")
-                        try:
-                            locale.setlocale(locale.LC_TIME, 'Portuguese_Brazil.1252')
-                        except locale.Error:
-                            logger.warning("Locale do Windows não encontrado, usando padrão 'C'.")
-                            locale.setlocale(locale.LC_TIME, 'C') # Fallback
-                    
-                    # Pega o dia da semana atual em português (ex: "terça-feira")
-                    dia_da_semana = datetime.now().strftime('%A').lower()
-                    # --- FIM MUDANÇA ---
-
-                    perfil_dict = {
-                        "foco_nome": perfil_foco.foco_nome,
-                        "detalhes": perfil_foco.detalhes,
-                        "dados_especificos": perfil_foco.dados_especificos or {},
-                        "dia_da_semana": dia_da_semana # <-- Passa o dia da semana para a IA
-                    }
-
-                    engine = FocusAIEngine(); sugestao = engine.gerar_sugestao_tarefa_diaria(perfil_dict)
-                    if sugestao: return JsonResponse({'titulo': sugestao.titulo, 'descricao': sugestao.descricao_motivacional,'dificuldade': sugestao.dificuldade, 'xp': sugestao.xp_calculado})
-                    else: return JsonResponse({'error': 'IA não gerou sugestão.'}, status=500)
-                except UsuarioFoco.DoesNotExist: return JsonResponse({'error': f'Perfil "{foco_nome}" não encontrado.'}, status=404)
-                except Exception as e: logger.exception("Erro AJAX gerar IA:"); return JsonResponse({'error': 'Erro interno ao gerar.'}, status=500)
-
-            # --- CASO 2: AJAX para Salvar Sugestão da IA ---
-            elif action == 'salvar_sugestao':
-                 # (Código igual ao anterior)
-                 titulo = data.get('titulo'); descricao = data.get('descricao')
-                 xp_recebido = data.get('xp', 10)
-                 logger.info(f"AJAX salvar sugestão IA: '{titulo}' (XP: {xp_recebido})")
-                 if not titulo or not descricao: return JsonResponse({'error': 'Dados faltando.'}, status=400)
-                 try:
-                     nova_tarefa = Tarefa.objects.create( usuario=request.user, titulo=titulo, descricao=descricao, frequencia='diaria', hora_lembrete=time(9, 0), xp=int(xp_recebido), concluida=False )
-                     logger.info(f"Tarefa sugerida '{titulo}' salva com PK {nova_tarefa.pk}.")
-                     return JsonResponse({ 'success': True, 'tarefa_id': nova_tarefa.pk, 'titulo': nova_tarefa.titulo, 'frequencia_display': nova_tarefa.get_frequencia_display(), 'hora_lembrete': nova_tarefa.hora_lembrete.strftime('%H:%M') if nova_tarefa.hora_lembrete else '', 'url_concluir': reverse('home:concluir_tarefa', args=[nova_tarefa.pk]), 'descricao_completa': nova_tarefa.descricao, 'xp_adicionado': nova_tarefa.xp })
-                 except Exception as e: logger.exception("Erro CRÍTICO AJAX salvar sugestão:"); return JsonResponse({'error': 'Erro ao salvar tarefa.'}, status=500)
-
-            # --- CASO 3: Submissão Normal do Formulário HTML ---
+                    nova_tarefa = Tarefa.objects.create( 
+                        usuario=request.user, titulo=titulo, descricao=descricao, 
+                        frequencia='DIARIA', hora_lembrete=time(9, 0), 
+                        xp=int(xp_recebido), xp_original=int(xp_recebido), 
+                        tipo_tarefa='PESSOAL', concluida=False 
+                    )
+                    request.user.slots_tarefas_pessoais_usados += 1
+                    request.user.save(update_fields=['slots_tarefas_pessoais_usados'])
+                    logger.info(f"Tarefa sugerida '{titulo}' salva com PK {nova_tarefa.pk}.")
+                    return JsonResponse({ 'success': True, 'tarefa_id': nova_tarefa.pk, 'titulo': nova_tarefa.titulo, 'frequencia_display': nova_tarefa.get_frequencia_display(), 'hora_lembrete': nova_tarefa.hora_lembrete.strftime('%H:%M') if nova_tarefa.hora_lembrete else '', 'url_concluir': reverse('home:concluir_tarefa', args=[nova_tarefa.pk]), 'descricao_completa': nova_tarefa.descricao, 'xp_adicionado': nova_tarefa.xp, 'slots_usados': request.user.slots_tarefas_pessoais_usados })
+                except Exception as e: logger.exception("Erro CRÍTICO AJAX salvar sugestão:"); return JsonResponse({'error': 'Erro ao salvar tarefa.'}, status=500)
             elif action == 'salvar_manual':
-                # (Código igual ao anterior)
                 if form.is_valid():
-                    nova_tarefa = form.save(commit=False); nova_tarefa.usuario = request.user;
+                    nova_tarefa = form.save(commit=False)
+                    nova_tarefa.usuario = request.user
+                    nova_tarefa.tipo_tarefa = 'TEMPLATE_PESSOAL' 
+                    nova_tarefa.xp = 10 
+                    nova_tarefa.xp_original = 10
                     nova_tarefa.save() 
-                    messages.success(request, 'Tarefa adicionada!'); return redirect('home:lista_Tarefas')
+                    messages.success(request, f'Tarefa "{nova_tarefa.titulo}" criada na sua lista de pessoais!'); 
+                    return redirect('home:adicionar_Tarefas')
                 else:
-                    context = { 'form': form, 'perfis_usuario': perfis_usuario }; messages.error(request, 'Corrija os erros.'); return render(request, 'home/tarefas/adicionar_Tarefas.html', context)
+                    tarefas_pessoais_list = Tarefa.objects.filter(usuario=request.user, tipo_tarefa='TEMPLATE_PESSOAL').order_by('titulo')
+                    context = { 'form': form, 'perfis_usuario': perfis_usuario, 'slots_usados': slots_usados_hoje, 'slots_limite': Usuario.LIMITE_SLOTS_PESSOAIS, 'tarefas_pessoais_list': tarefas_pessoais_list }; 
+                    messages.error(request, 'Corrija os erros.'); 
+                    return render(request, 'home/tarefas/adicionar_Tarefas.html', context)
+            elif action == 'gerar_sugestao':
+                foco_nome = data.get('foco_nome'); 
+                if not foco_nome: return JsonResponse({'error': 'Foco não fornecido.'}, status=400)
+                perfil_foco = get_object_or_404(UsuarioFoco, user=request.user, foco_nome=foco_nome)
+                engine = FocusAIEngine(); sugestao = engine.gerar_sugestao_tarefa_diaria({"foco_nome": foco_nome, "dia_da_semana": "hoje"}) 
+                if sugestao: return JsonResponse({'titulo': sugestao.titulo, 'descricao': sugestao.descricao_motivacional,'dificuldade': sugestao.dificuldade, 'xp': sugestao.xp_calculado})
+                else: return JsonResponse({'error': 'IA não gerou sugestão.'}, status=500)
             else:
-                # (Código igual ao anterior)
                 if is_ajax: return JsonResponse({'error': 'Ação inválida.'}, status=400)
-                else: messages.error(request, 'Ação inválida.'); context = { 'form': form, 'perfis_usuario': perfis_usuario }; return render(request, 'home/tarefas/adicionar_Tarefas.html', context)
-        
-        # --- Lógica GET ---
-        else: # request.method == 'GET'
-            context = { 'form': form, 'perfis_usuario': perfis_usuario }
+                else: messages.error(request, 'Ação inválida.'); return redirect('home:adicionar_Tarefas')
+        else: 
+            tarefas_pessoais_list = Tarefa.objects.filter(
+                usuario=request.user, 
+                tipo_tarefa='TEMPLATE_PESSOAL' 
+            ).order_by('titulo')
+            context = { 
+                'form': form, 
+                'perfis_usuario': perfis_usuario, 
+                'slots_usados': slots_usados_hoje, 
+                'slots_limite': Usuario.LIMITE_SLOTS_PESSOAIS,
+                'tarefas_pessoais_list': tarefas_pessoais_list 
+            }
             return render(request, 'home/tarefas/adicionar_Tarefas.html', context)
     except Exception as e:
-        logger.exception(f"Erro GERAL adicionar_Tarefas:"); messages.error(request, "Erro inesperado."); return redirect('home:lista_Tarefas')
+        logger.exception(f"Erro GERAL adicionar_Tarefas:") 
+        messages.error(request, "Erro inesperado ao carregar a página."); 
+        return redirect('home:lista_Tarefas')
 
 
-# --- View concluir_tarefa (Atualizada para XP) ---
 @login_required
 def concluir_tarefa(request, tarefa_id):
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
@@ -149,48 +156,69 @@ def concluir_tarefa(request, tarefa_id):
 
     try:
         tarefa = get_object_or_404(Tarefa, pk=tarefa_id, usuario=request.user)
-        logger.info(f"Tarefa encontrada: '{tarefa.titulo}', Concluída antes: {tarefa.concluida}")
-        era_concluida_antes = tarefa.concluida
-        novo_estado = not tarefa.concluida
-        tarefa.concluida = novo_estado
+        usuario_obj = request.user 
         
-        xp_ganho = 0
-        usuario_obj = request.user
-        usuario_xp_total = usuario_obj.xp_atual or 0
-
-        if not era_concluida_antes and tarefa.concluida: # MARCANDO como concluída
+        if tarefa.concluida:
+            logger.info(f"Desmarcando tarefa PK {tarefa.pk}")
+            tarefa.concluida = False
+            xp_ganho = 0
+            usuario_xp_total = usuario_obj.xp_atual or 0
+            
             try:
-                xp_ganho = tarefa.xp
-                usuario_xp_total = usuario_xp_total + xp_ganho
-                usuario_obj.xp_atual = usuario_xp_total
-                usuario_obj.save(update_fields=['xp_atual']) # Salva SÓ o XP
-                logger.info(f"Usuário ID {usuario_obj.pk} ganhou {xp_ganho} XP. Total: {usuario_xp_total}")
+                if not tarefa.falhou:
+                    xp_perdido = tarefa.xp_original or tarefa.xp 
+                    usuario_xp_total = max(0, usuario_xp_total - xp_perdido) 
+                    xp_ganho = -xp_perdido
+                    usuario_obj.xp_atual = usuario_xp_total
+                    usuario_obj.tarefas_concluidas_prazo_count = max(0, usuario_obj.tarefas_concluidas_prazo_count - 1)
+                    logger.info(f"Usuário ID {usuario_obj.pk} perdeu {xp_perdido} XP (PK {tarefa.pk}). Total: {usuario_xp_total}")
+                else:
+                    usuario_obj.tarefas_concluidas_atrasadas_count = max(0, usuario_obj.tarefas_concluidas_atrasadas_count - 1)
+                    logger.info(f"Usuário ID {usuario_obj.pk} desmarcou tarefa ATRASADA (PK {tarefa.pk}).")
+                
+                usuario_obj.save(update_fields=['xp_atual', 'tarefas_concluidas_atrasadas_count', 'tarefas_concluidas_prazo_count'])
+            
             except Exception as e_xp:
-                logger.error(f"Erro ao adicionar XP: {e_xp}", exc_info=True)
-        
-        elif era_concluida_antes and not tarefa.concluida: # DESMARCANDO
+                logger.error(f"Erro ao remover XP/Contagem: {e_xp}", exc_info=True)
+
+        else:
+            logger.info(f"Marcando tarefa PK {tarefa.pk} como concluída.")
+            
+            if tarefa.descartada or tarefa.falhou:
+                logger.warning(f"Usuário {request.user.email} tentou concluir (pela URL normal) uma tarefa que falhou ou foi descartada (PK {tarefa.pk}).")
+                return JsonResponse({'error': 'Esta tarefa não pode ser concluída por esta ação.'}, status=403)
+
+            tarefa.concluida = True
+            xp_ganho = 0
+            usuario_xp_total = usuario_obj.xp_atual or 0
+            
             try:
-                xp_perdido = tarefa.xp
-                usuario_xp_total = max(0, usuario_xp_total - xp_perdido) # Não fica negativo
-                xp_ganho = -xp_perdido
-                usuario_obj.xp_atual = usuario_xp_total
-                usuario_obj.save(update_fields=['xp_atual'])
-                logger.info(f"Usuário ID {usuario_obj.pk} perdeu {xp_perdido} XP. Total: {usuario_xp_total}")
+                xp_ganho = tarefa.xp_original or tarefa.xp 
+                usuario_obj.adicionar_xp(xp_ganho)
+                
+                usuario_obj.tarefas_concluidas_prazo_count += 1
+                usuario_obj.save(update_fields=['tarefas_concluidas_prazo_count'])
+                
+                logger.info(f"Usuário ID {usuario_obj.pk} ganhou {xp_ganho} XP (PK {tarefa.pk}). Contador PRAZO: {usuario_obj.tarefas_concluidas_prazo_count}")
+                
+                usuario_xp_total = usuario_obj.xp_atual 
+                
             except Exception as e_xp:
-                 logger.error(f"Erro ao remover XP: {e_xp}", exc_info=True)
-
-        logger.info(f"Tentando salvar tarefa PK {tarefa.pk} com concluida = {novo_estado}...")
-        tarefa.save() # Salva a tarefa (o save custom do modelo lida com data_conclusao)
-        logger.info(f"Tarefa PK {tarefa.pk} SALVA!")
-
-        if not era_concluida_antes and tarefa.concluida:
+                logger.error(f"Erro ao adicionar XP/Contagem: {e_xp}", exc_info=True)
+            
             logger.info("Verificando conquistas...")
             try: verificar_e_conceder_conquistas_de_tarefas(request.user)
             except Exception as e_conq: logger.error(f"Erro conquistas: {e_conq}", exc_info=True)
 
+        tarefa.save() 
+        logger.info(f"Tarefa PK {tarefa.pk} SALVA! (Concluida={tarefa.concluida})")
+
         if is_ajax:
-            logger.info("Retornando JSON de sucesso para AJAX.")
-            return JsonResponse({ 'success': True, 'concluida': tarefa.concluida, 'xp_ganho': xp_ganho, 'xp_total_usuario': usuario_xp_total })
+            return JsonResponse({ 
+                'success': True, 'concluida': tarefa.concluida, 'xp_ganho': xp_ganho, 
+                'xp_total_usuario': usuario_xp_total, 'nivel_usuario': usuario_obj.nivel, 
+                'xp_proximo_nivel': usuario_obj.xp_proximo_nivel 
+            })
         else:
             status_msg = "concluída" if tarefa.concluida else "pendente"
             if xp_ganho > 0: messages.success(request, f'Tarefa "{tarefa.titulo}" {status_msg}! (+{xp_ganho} XP)')
@@ -198,10 +226,118 @@ def concluir_tarefa(request, tarefa_id):
             return redirect('home:lista_Tarefas')
 
     except Tarefa.DoesNotExist:
-         logger.warning(f"Tarefa PK {tarefa_id} não encontrada!")
-         if is_ajax: return JsonResponse({'error': 'Tarefa não encontrada.'}, status=404)
-         else: messages.error(request, "Tarefa não encontrada."); return redirect('home:lista_Tarefas')
+        logger.warning(f"Tarefa PK {tarefa_id} não encontrada!")
+        if is_ajax: return JsonResponse({'error': 'Tarefa não encontrada.'}, status=404)
+        else: messages.error(request, "Tarefa não encontrada."); return redirect('home:lista_Tarefas')
     except Exception as e:
         logger.exception(f"Erro GERAL concluir_tarefa (pk={tarefa_id}):")
         if is_ajax: return JsonResponse({'error': 'Erro interno.'}, status=500)
         else: messages.error(request, "Erro ao alterar status."); return redirect('home:lista_Tarefas')
+
+
+@login_required
+def salvar_recorrencia(request):
+    if not request.method == 'POST':
+        return JsonResponse({'success': False, 'error': 'Método inválido.'}, status=405)
+    try:
+        data = json.loads(request.body)
+        tarefa_id = data.get('tarefa_id')
+        dia = data.get('dia') 
+        status = data.get('status')
+        if not all([tarefa_id, dia, status is not None]):
+             return JsonResponse({'success': False, 'error': 'Dados incompletos.'}, status=400)
+        DIAS_MAP = {
+            'dom': 'recorrente_dom', 'seg': 'recorrente_seg', 'ter': 'recorrente_ter',
+            'qua': 'recorrente_qua', 'qui': 'recorrente_qui', 'sex': 'recorrente_sex',
+            'sab': 'recorrente_sab',
+        }
+        campo_para_atualizar = DIAS_MAP.get(dia)
+        if not campo_para_atualizar:
+            return JsonResponse({'success': False, 'error': 'Dia inválido.'}, status=400)
+        tarefa = get_object_or_404(Tarefa, pk=tarefa_id, usuario=request.user, tipo_tarefa='TEMPLATE_PESSOAL')
+        setattr(tarefa, campo_para_atualizar, status)
+        tarefa.save(update_fields=[campo_para_atualizar])
+        logger.info(f"Recorrência da tarefa {tarefa.pk} atualizada: {campo_para_atualizar} = {status}")
+        return JsonResponse({'success': True, 'novo_texto': tarefa.get_dias_recorrencia_display() or "Definir recorrência"})
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'error': 'JSON mal formatado.'}, status=400)
+    except Tarefa.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Tarefa não encontrada.'}, status=404)
+    except Exception as e:
+        logger.exception("Erro ao salvar recorrência:")
+        return JsonResponse({'success': False, 'error': 'Erro interno no servidor.'}, status=500)
+
+
+@login_required
+def descartar_tarefa(request, tarefa_id):
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    logger.info(f"--- Iniciando DESCARTAR_tarefa para PK {tarefa_id} (AJAX: {is_ajax}) ---")
+    if request.method != 'POST':
+        if is_ajax: return JsonResponse({'error': 'Método não permitido.'}, status=405)
+        else: messages.warning(request, "Ação inválida."); return redirect('home:lista_Tarefas')
+    try:
+        tarefa = get_object_or_404(Tarefa, pk=tarefa_id, usuario=request.user)
+        usuario_obj = request.user
+        if not tarefa.falhou or tarefa.concluida or tarefa.descartada:
+             logger.warning(f"Usuário {request.user.email} tentou descartar tarefa (PK {tarefa.pk}) que não está 'falhada'.")
+             if is_ajax: return JsonResponse({'error': 'Esta tarefa não pode ser descartada.'}, status=403)
+             else: messages.error(request, "Esta tarefa não pode ser descartada."); return redirect('home:lista_Tarefas')
+        tarefa.descartada = True
+        tarefa.save(update_fields=['descartada', 'data_acao_final']) 
+        usuario_obj.tarefas_descartadas_count += 1
+        usuario_obj.save(update_fields=['tarefas_descartadas_count'])
+        logger.info(f"Tarefa PK {tarefa.pk} marcada como DESCARTADA. Contador: {usuario_obj.tarefas_descartadas_count}")
+        if is_ajax:
+            return JsonResponse({'success': True, 'descartada': True})
+        else:
+            messages.info(request, f'Tarefa "{tarefa.titulo}" foi descartada.')
+            return redirect('home:lista_Tarefas')
+    except Tarefa.DoesNotExist:
+        logger.warning(f"Tarefa PK {tarefa_id} não encontrada (para descarte)!")
+        if is_ajax: return JsonResponse({'error': 'Tarefa não encontrada.'}, status=404)
+        else: messages.error(request, "Tarefa não encontrada."); return redirect('home:lista_Tarefas')
+    except Exception as e:
+        logger.exception(f"Erro GERAL descartar_tarefa (pk={tarefa_id}):")
+        if is_ajax: return JsonResponse({'error': 'Erro interno.'}, status=500)
+        else: messages.error(request, "Erro ao descartar tarefa."); return redirect('home:lista_Tarefas')
+
+
+@login_required
+def concluir_atrasado(request, tarefa_id):
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    logger.info(f"--- Iniciando CONCLUIR_ATRASADO para PK {tarefa_id} (AJAX: {is_ajax}) ---")
+    if request.method != 'POST':
+        if is_ajax: return JsonResponse({'error': 'Método não permitido.'}, status=405)
+        else: messages.warning(request, "Ação inválida."); return redirect('home:lista_Tarefas')
+    try:
+        tarefa = get_object_or_404(Tarefa, pk=tarefa_id, usuario=request.user)
+        usuario_obj = request.user
+        if not tarefa.falhou or tarefa.concluida or tarefa.descartada:
+             logger.warning(f"Usuário {request.user.email} tentou 'concluir atrasado' (PK {tarefa.pk}) que não está 'falhada'.")
+             if is_ajax: return JsonResponse({'error': 'Esta tarefa não pode ser concluída (atrasada).'}, status=403)
+             else: messages.error(request, "Esta tarefa não pode ser concluída (atrasada)."); return redirect('home:lista_Tarefas')
+        tarefa.descartada = True 
+        tarefa.save(update_fields=['descartada', 'data_acao_final']) 
+        usuario_obj.tarefas_concluidas_atrasadas_count += 1
+        usuario_obj.save(update_fields=['tarefas_concluidas_atrasadas_count'])
+        logger.info(f"Tarefa PK {tarefa.pk} marcada como CONCLUÍDA (ATRASADA). Contador: {usuario_obj.tarefas_concluidas_atrasadas_count}")
+        if is_ajax:
+            return JsonResponse({
+                'success': True,
+                'concluida': True,
+                'xp_ganho': 0,
+                'xp_total_usuario': usuario_obj.xp_atual,
+                'nivel_usuario': usuario_obj.nivel,
+                'xp_proximo_nivel': usuario_obj.xp_proximo_nivel
+            })
+        else:
+            messages.info(request, f'Tarefa "{tarefa.titulo}" foi concluída (sem XP).')
+            return redirect('home:lista_Tarefas')
+    except Tarefa.DoesNotExist:
+        logger.warning(f"Tarefa PK {tarefa_id} não encontrada (para concluir atrasado)!")
+        if is_ajax: return JsonResponse({'error': 'Tarefa não encontrada.'}, status=404)
+        else: messages.error(request, "Tarefa não encontrada."); return redirect('home:lista_Tarefas')
+    except Exception as e:
+        logger.exception(f"Erro GERAL concluir_atrasado (pk={tarefa_id}):")
+        if is_ajax: return JsonResponse({'error': 'Erro interno.'}, status=500)
+        else: messages.error(request, "Erro ao concluir tarefa."); return redirect('home:lista_Tarefas')

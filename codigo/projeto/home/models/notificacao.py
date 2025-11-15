@@ -1,10 +1,7 @@
-# home/models/notificacao.py
-
 from django.db import models
 from .usuario import Usuario
 
 class Notificacao(models.Model):
-    # Exemplo de choices, você pode adicionar mais
     TIPO_CHOICES = [
         ('CONQUISTA', 'Nova Conquista'),
         ('AMIZADE', 'Pedido de Amizade'),
@@ -17,10 +14,10 @@ class Notificacao(models.Model):
     tipo = models.CharField(max_length=50, choices=TIPO_CHOICES)
     mensagem = models.TextField()
     data_envio = models.DateTimeField(auto_now_add=True)
-    lida = models.BooleanField(default=False) # Campo útil para saber se o usuário já viu
+    lida = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['-data_envio'] # Ordena as notificações da mais nova para a mais antiga
+        ordering = ['-data_envio']
         verbose_name = 'Notificação'
         verbose_name_plural = 'Notificações'
 

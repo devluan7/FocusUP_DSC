@@ -1,14 +1,7 @@
-/* home/static/home/css/estiloperfil.css */
-
-/* Este CSS usa as variáveis do 'estilohome.css' 
-   (que é carregado primeiro no HTML) 
-*/
-
 body {
     background-color: var(--cor-fundo);
 }
 
-/* --- Container Principal --- */
 .container-perfil {
     max-width: 900px;
     margin: 2.5rem auto;
@@ -18,7 +11,6 @@ body {
     gap: 2.5rem;
 }
 
-/* --- Card Principal --- */
 .secao {
     background-color: var(--cor-secao);
     border-radius: 16px;
@@ -36,7 +28,6 @@ body {
     margin-bottom: 1.5rem;
 }
 
-/* --- Mensagens do Django (Dark Mode) --- */
 .container-mensagens {
     width: 100%;
 }
@@ -64,14 +55,13 @@ body {
     border-color: rgba(23, 162, 184, 0.3);
 }
 
-/* --- Dropdown Principal (Seletor de Foco) --- */
 .container-seletor-perfil {
     margin-bottom: 2rem;
 }
 
 .seletor-perfil-dropdown {
     width: 100%;
-    padding: 14px 15px; /* Mais alto */
+    padding: 14px 15px; 
     border: 1px solid var(--cor-borda);
     background-color: var(--cor-fundo);
     border-radius: 8px;
@@ -92,15 +82,14 @@ body {
     box-shadow: 0 0 5px rgba(90, 72, 245, 0.3);
 }
 
-/* --- Área de Exibição (Modo "Visualizar") --- */
 .exibicao-perfil-detalhes {
     padding: 2rem;
     background-color: var(--cor-fundo);
     border: 2px dashed var(--cor-borda);
     border-radius: 8px;
     color: var(--cor-texto-secundario);
-    text-align: left; /* Alinha o texto à esquerda */
-    font-style: normal; /* Remove itálico */
+    text-align: left; 
+    font-style: normal; 
     transition: all 0.3s ease;
 }
 .exibicao-perfil-detalhes .perfil-vazio-js {
@@ -127,7 +116,6 @@ body {
     margin-right: 5px;
 }
 
-/* --- Formulário (Modo "Editar") --- */
 #secao-formulario {
     padding-top: 1.5rem;
     border-top: 1px solid var(--cor-borda);
@@ -138,18 +126,16 @@ body {
     display: none;
 }
 
-/* 1. REMOVE O "QUADRADO" INTERNO FEIO */
 .campos-especificos {
     background: transparent;
     border: none;
     padding: 0;
-    margin-bottom: 2.5rem; /* Adiciona espaço ENTRE os grupos */
+    margin-bottom: 2.5rem; 
 }
 
-/* 2. ESTILIZA O TÍTULO (Ex: "Detalhes dos Estudos") */
 .campos-especificos h4 {
     font-family: "Poppins", sans-serif;
-    color: var(--cor-destaque); /* Amarelo */
+    color: var(--cor-destaque); 
     font-size: 1.1em;
     margin-top: 0;
     margin-bottom: 1.5rem;
@@ -157,21 +143,17 @@ body {
     padding-bottom: 0.75rem;
 }
 
-/* 3. ADICIONA ESPAÇO ENTRE OS CAMPOS (O "NÃO FICAR JUNTO") */
 .campo-form {
     margin-bottom: 1.5rem; 
 }
-/* O último campo de um grupo não precisa de margem extra */
 .campos-especificos .campo-form:last-child {
     margin-bottom: 0;
 }
-/* O campo de "Observações" (fora de um grupo) também precisa de espaço */
 #perfil-foco-form > .campo-form {
     margin-bottom: 1.5rem;
 }
 
 
-/* 4. ESTILO DOS CAMPOS E LABELS */
 .campo-form label {
     display: block;
     margin-bottom: 8px;
@@ -187,7 +169,7 @@ body {
 #perfil-foco-form input[type="date"],
 #perfil-foco-form select,
 #perfil-foco-form textarea {
-    width: 100%; /* <-- FAZ OS CAMPOS OCUPAREM 100% DA LARGURA */
+    width: 100%; 
     padding: 12px 15px;
     border: 1px solid var(--cor-borda);
     background-color: var(--cor-fundo);
@@ -224,7 +206,6 @@ body {
     resize: vertical;
 }
 
-/* Erros do formulário */
 .campo-form .errorlist {
     color: var(--cor-erro);
     font-family: 'Lato', sans-serif;
@@ -234,7 +215,6 @@ body {
     padding-left: 0;
 }
 
-/* --- Botões Salvar / Cancelar --- */
 .botoes-formulario {
     display: flex;
     gap: 1rem;
@@ -275,7 +255,6 @@ body {
     color: var(--cor-branco);
 }
 
-/* --- Botão "Personalizar" (Criado pelo JS) --- */
 .botao-personalizar {
     display: inline-block;
     background-color: var(--cor-destaque);
@@ -299,7 +278,6 @@ body {
 }
 
 
-/* --- Responsividade --- */
 @media (max-width: 768px) {
     .container-perfil {
         margin-top: 1.5rem;
@@ -311,9 +289,9 @@ body {
     }
     .secao h2 {
         font-size: 1.25rem;
-    }    
+    }    
     .botoes-formulario {
-        flex-direction: column-reverse; /* Empilha os botões */
+        flex-direction: column-reverse; 
     }
     .submit-button,
     .cancel-button {

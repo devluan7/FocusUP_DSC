@@ -1,24 +1,13 @@
-# Em home/models/usuario_foco.py
 from django.db import models
-from .usuario import Usuario # Usando o seu modelo de Usuário!
+from .usuario import Usuario
 
-class UsuarioFoco(models.Model): 
-    """
-    Armazena os perfis detalhados de cada usuário 
-    para cada foco (academia, estudos, etc.) que a IA usará.
-    """
+class UsuarioFoco(models.Model):
+    user = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="focos_usuario")
+    foco_nome = models.CharField(max_length=50, verbose_name="Nome do Foco")
     
-    user = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="focos_usuario") 
-    foco_nome = models.CharField(max_length=50, verbose_name="Nome do Foco") 
-    
-    # --- CAMPO CORRETO (JSONField) ---
-    # Removemos 'descricao_curta'.
-    # Adicionamos o JSONField para guardar os dados estruturados.
     dados_especificos = models.JSONField(default=dict, blank=True, verbose_name="Dados Específicos do Foco")
-    # ---------------------------------
     
-    # Mantemos 'detalhes' para notas adicionais do usuário
-    detalhes = models.TextField(blank=True, verbose_name="Observações Adicionais (para a IA)") 
+    detalhes = models.TextField(blank=True, verbose_name="Observações Adicionais (para a IA)")
 
     class Meta:
         unique_together = ('user', 'foco_nome')

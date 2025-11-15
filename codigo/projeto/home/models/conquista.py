@@ -1,5 +1,3 @@
-# home/models/conquista.py
-
 from django.db import models
 from .usuario import Usuario
 
